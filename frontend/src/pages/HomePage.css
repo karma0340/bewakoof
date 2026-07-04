@@ -359,8 +359,11 @@
 .shop-slider-track {
   display: flex;
   width: 100%;
-  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   transform: translateX(calc(var(--slide-index, 0) * -100%));
+}
+
+.shop-slider-track.has-transition {
+  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .shop-slide {

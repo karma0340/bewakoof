@@ -88,6 +88,7 @@ const OVERSIZED_HAUL_WIDGETS = [
 const HomePage = ({ gender, setGender }) => {
   const [tickerIndex, setTickerIndex] = useState(0);
   const [slideIndex, setSlideIndex] = useState(0);
+  const [transitionEnabled, setTransitionEnabled] = useState(true);
   const [bestsellers, setBestsellers] = useState([]);
   const [loadingBestsellers, setLoadingBestsellers] = useState(false);
 
@@ -121,15 +122,30 @@ const HomePage = ({ gender, setGender }) => {
   const activeBanners = gender ? HERO_BANNERS[gender] || HERO_BANNERS.men : [];
   const activeCategories = gender === 'women' ? WOMEN_TRENDING_CATEGORIES : MEN_TRENDING_CATEGORIES;
 
-  // Auto-slide hero banners
+  // Auto-slide hero banners with seamless infinite loop
   useEffect(() => {
     if (!gender) return;
-    setSlideIndex(0); // Reset slide on gender swap
+    setSlideIndex(0); // Reset on gender swap
+    setTransitionEnabled(true);
+    
     const slideTimer = setInterval(() => {
-      setSlideIndex((prev) => (prev + 1) % activeBanners.length);
+      setTransitionEnabled(true);
+      setSlideIndex((prev) => prev + 1);
     }, 3800);
     return () => clearInterval(slideTimer);
-  }, [gender, activeBanners.length]);
+  }, [gender]);
+
+  // Snap-back logic for infinite loop
+  useEffect(() => {
+    if (slideIndex === activeBanners.length) {
+      // Wait for the slide transition (0.5s) to complete, then snap back
+      const resetTimer = setTimeout(() => {
+        setTransitionEnabled(false);
+        setSlideIndex(0);
+      }, 500); 
+      return () => clearTimeout(resetTimer);
+    }
+  }, [slideIndex, activeBanners.length]);
 
   const currentTicker = TICKER_ITEMS[tickerIndex];
 
@@ -193,8 +209,12 @@ const HomePage = ({ gender, setGender }) => {
     <div className="shop-home-wrapper">
       {/* 1. Hero Auto-sliding Banner Slider */}
       <section className="shop-slider-container">
-        <div className="shop-slider-track" style={{ '--slide-index': slideIndex }}>
-          {activeBanners.map((banner, index) => (
+        <div 
+          className={`shop-slider-track ${transitionEnabled ? 'has-transition' : ''}`} 
+          style={{ '--slide-index': slideIndex }}
+        >
+          {/* Render the banners twice for seamless infinite loop */}
+          {[...activeBanners, ...activeBanners].map((banner, index) => (
             <div className="shop-slide" key={index}>
               <img src={banner} alt={`Banner ${index}`} className="slide-image" />
             </div>
@@ -204,8 +224,11 @@ const HomePage = ({ gender, setGender }) => {
           {activeBanners.map((_, index) => (
             <span
               key={index}
-              className={`slider-dot ${index === slideIndex ? 'active' : ''}`}
-              onClick={() => setSlideIndex(index)}
+              className={`slider-dot ${index === (slideIndex % activeBanners.length) ? 'active' : ''}`}
+              onClick={() => {
+                setTransitionEnabled(true);
+                setSlideIndex(index);
+              }}
             />
           ))}
         </div>
