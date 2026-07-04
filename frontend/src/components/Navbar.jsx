@@ -262,7 +262,7 @@ const MEGA_MENU_DATA = {
   },
 };
 
-const Navbar = () => {
+const Navbar = ({ gender, setGender }) => {
   const { user, logout, isAuthenticated } = useAuth();
   const { cartCount } = useCart();
   const { wishlist } = useWishlist();
@@ -273,17 +273,20 @@ const Navbar = () => {
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
-  const [activeGender, setActiveGender] = useState('men');
   const [hoveredMegaMenu, setHoveredMegaMenu] = useState(null);
+
+  const activeGender = location.pathname.includes('women')
+    ? 'women'
+    : location.pathname.includes('men')
+    ? 'men'
+    : location.pathname === '/'
+    ? gender
+    : null;
 
   const searchRef = useRef(null);
   const fuseRef = useRef(null);
   const megaMenuTimerRef = useRef(null);
 
-  useEffect(() => {
-    if (location.pathname.includes('women')) setActiveGender('women');
-    else setActiveGender('men');
-  }, [location.pathname]);
 
   /* Load products for fuzzy search */
   useEffect(() => {
@@ -376,7 +379,6 @@ const Navbar = () => {
             />
           </Link>
 
-          {/* Main Nav with Mega Menu Hover triggers */}
           <nav className="navbar-nav">
             <div
               className="nav-item-wrap"
@@ -385,8 +387,14 @@ const Navbar = () => {
             >
               <Link
                 to="/men-clothing"
-                className={`nav-link ${location.pathname === '/men-clothing' || hoveredMegaMenu === 'men' ? 'active' : ''}`}
+                className={`nav-link ${(location.pathname === '/' && activeGender === 'men') || location.pathname === '/men-clothing' || hoveredMegaMenu === 'men' ? 'active' : ''}`}
                 onMouseEnter={() => handleMegaMouseEnter('men')}
+                onClick={(e) => {
+                  if (location.pathname === '/') {
+                    e.preventDefault();
+                    setGender('men');
+                  }
+                }}
               >
                 MEN
               </Link>
@@ -399,8 +407,14 @@ const Navbar = () => {
             >
               <Link
                 to="/women-clothing"
-                className={`nav-link ${location.pathname === '/women-clothing' || hoveredMegaMenu === 'women' ? 'active' : ''}`}
+                className={`nav-link ${(location.pathname === '/' && activeGender === 'women') || location.pathname === '/women-clothing' || hoveredMegaMenu === 'women' ? 'active' : ''}`}
                 onMouseEnter={() => handleMegaMouseEnter('women')}
+                onClick={(e) => {
+                  if (location.pathname === '/') {
+                    e.preventDefault();
+                    setGender('women');
+                  }
+                }}
               >
                 WOMEN
               </Link>
@@ -575,14 +589,20 @@ const Navbar = () => {
         )}
       </header>
 
-      {/* ── Sub-Nav (scrollable pill bar) — Shown on shop pages ── */}
-      {location.pathname !== '/' && (
+      {/* ── Sub-Nav (scrollable pill bar) — Shown on shop pages or when gender is active ── */}
+      {(location.pathname !== '/' || gender) && (
         <div className="subnav">
           <div className="subnav-inner">
             {SUB_NAV.map((item) => (
               <Link
                 key={item.label}
                 to={item.link}
+                onClick={(e) => {
+                  if (item.gender && location.pathname === '/') {
+                    e.preventDefault();
+                    setGender(item.gender);
+                  }
+                }}
                 className={`subnav-link ${item.gender === activeGender ? 'subnav-pill-active' : item.gender ? 'subnav-pill-inactive' : ''}`}
               >
                 {item.label}
