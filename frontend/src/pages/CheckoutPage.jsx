@@ -6,7 +6,8 @@ import { useToast } from '../context/ToastContext';
 import axios from 'axios';
 import './CheckoutPage.css';
 
-const API = import.meta.env.VITE_API_URL || '/api';
+const baseUrl = import.meta.env.VITE_API_URL || '';
+const API = baseUrl ? (baseUrl.endsWith('/api') ? baseUrl : `${baseUrl.replace(/\/$/, '')}/api`) : '/api';
 
 const CheckoutPage = () => {
   const { cart, cartTotal, clearCart } = useCart();

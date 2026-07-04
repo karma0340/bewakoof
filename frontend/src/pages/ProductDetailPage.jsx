@@ -7,7 +7,8 @@ import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import './ProductDetailPage.css';
 
-const API = import.meta.env.VITE_API_URL || '/api';
+const baseUrl = import.meta.env.VITE_API_URL || '';
+const API = baseUrl ? (baseUrl.endsWith('/api') ? baseUrl : `${baseUrl.replace(/\/$/, '')}/api`) : '/api';
 
 const ProductDetailPage = () => {
   const { id } = useParams();

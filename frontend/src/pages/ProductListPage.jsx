@@ -5,7 +5,8 @@ import ProductCard from '../components/ProductCard';
 import FilterSidebar from '../components/FilterSidebar';
 import './ProductListPage.css';
 
-const API = import.meta.env.VITE_API_URL || '/api';
+const baseUrl = import.meta.env.VITE_API_URL || '';
+const API = baseUrl ? (baseUrl.endsWith('/api') ? baseUrl : `${baseUrl.replace(/\/$/, '')}/api`) : '/api';
 
 const SORT_OPTIONS = [
   { label: 'Popularity', value: 'popularity' },

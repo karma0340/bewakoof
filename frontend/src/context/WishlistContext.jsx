@@ -3,7 +3,8 @@ import axios from 'axios';
 import { useAuth } from './AuthContext';
 
 const WishlistContext = createContext();
-const API = import.meta.env.VITE_API_URL || '/api';
+const baseUrl = import.meta.env.VITE_API_URL || '';
+const API = baseUrl ? (baseUrl.endsWith('/api') ? baseUrl : `${baseUrl.replace(/\/$/, '')}/api`) : '/api';
 
 export const WishlistProvider = ({ children }) => {
   const { isAuthenticated } = useAuth();

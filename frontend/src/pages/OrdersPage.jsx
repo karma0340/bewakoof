@@ -4,7 +4,8 @@ import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
 import './OrdersPage.css';
 
-const API = import.meta.env.VITE_API_URL || '/api';
+const baseUrl = import.meta.env.VITE_API_URL || '';
+const API = baseUrl ? (baseUrl.endsWith('/api') ? baseUrl : `${baseUrl.replace(/\/$/, '')}/api`) : '/api';
 
 const STATUS_COLORS = {
   placed: '#2196F3', confirmed: '#9C27B0', shipped: '#FF9800',

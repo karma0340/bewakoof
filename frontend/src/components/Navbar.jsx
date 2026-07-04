@@ -7,7 +7,8 @@ import { useWishlist } from '../context/WishlistContext';
 import axios from 'axios';
 import './Navbar.css';
 
-const API = import.meta.env.VITE_API_URL || '/api';
+const baseUrl = import.meta.env.VITE_API_URL || '';
+const API = baseUrl ? (baseUrl.endsWith('/api') ? baseUrl : `${baseUrl.replace(/\/$/, '')}/api`) : '/api';
 
 /* Sub-nav items — matches real bewakoof.com */
 const SUB_NAV = [
