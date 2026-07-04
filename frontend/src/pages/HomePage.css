@@ -292,7 +292,7 @@
     padding: 0 10px;
   }
   .landing-gender-card {
-    width: 48%;
+    width: calc((100% - 12px) / 2);
     height: 220px;
   }
   .landing-card-photo {
@@ -318,7 +318,7 @@
 
 @media (max-width: 480px) {
   .landing-gender-card {
-    width: 48%;
+    width: calc((100% - 12px) / 2);
     height: 180px;
   }
   .landing-card-btn {

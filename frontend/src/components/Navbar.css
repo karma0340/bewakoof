@@ -549,7 +549,29 @@
 }
 
 @media (max-width: 600px) {
-  .navbar-inner { padding: 0 12px; gap: 8px; }
+  .navbar-inner {
+    padding: 8px 12px 10px;
+    gap: 8px 12px;
+    height: auto;
+    flex-wrap: wrap;
+  }
+  .navbar-logo {
+    order: 1;
+  }
+  .navbar-actions {
+    order: 2;
+    margin-left: auto;
+    gap: 4px;
+  }
+  .navbar-search {
+    order: 3;
+    flex: 0 0 100%;
+    max-width: none;
+    margin: 4px 0 0 0;
+  }
+  .search-input-wrap {
+    height: 36px;
+  }
   .nav-action-label { display: none; }
   .nav-pipe { display: none; }
 }
