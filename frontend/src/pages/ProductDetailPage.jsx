@@ -7,7 +7,7 @@ import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import './ProductDetailPage.css';
 
-const API = '/api';
+const API = import.meta.env.VITE_API_URL || '/api';
 
 const ProductDetailPage = () => {
   const { id } = useParams();

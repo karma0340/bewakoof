@@ -4,7 +4,7 @@ import axios from 'axios';
 import ProductCard from '../components/ProductCard';
 import './SearchPage.css';
 
-const API = '/api';
+const API = import.meta.env.VITE_API_URL || '/api';
 
 const SearchPage = () => {
   const [searchParams] = useSearchParams();

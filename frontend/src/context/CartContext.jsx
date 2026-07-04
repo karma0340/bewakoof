@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useAuth } from './AuthContext';
 
 const CartContext = createContext();
-const API = '/api';
+const API = import.meta.env.VITE_API_URL || '/api';
 
 export const CartProvider = ({ children }) => {
   const { isAuthenticated } = useAuth();
