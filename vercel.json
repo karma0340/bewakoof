@@ -23,7 +23,7 @@
       "dest": "/frontend/assets/$1"
     },
     {
-      "src": "/(.*\.(svg|png|jpg|jpeg|ico|css|js|json))",
+      "src": "/(.*\\.(svg|png|jpg|jpeg|ico|css|js|json))",
       "dest": "/frontend/$1"
     },
     {
