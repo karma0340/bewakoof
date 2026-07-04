@@ -193,7 +193,7 @@ const HomePage = ({ gender, setGender }) => {
     <div className="shop-home-wrapper">
       {/* 1. Hero Auto-sliding Banner Slider */}
       <section className="shop-slider-container">
-        <div className="shop-slider-track" style={{ transform: `translateX(-${slideIndex * 100}%)` }}>
+        <div className="shop-slider-track" style={{ '--slide-index': slideIndex }}>
           {activeBanners.map((banner, index) => (
             <div className="shop-slide" key={index}>
               <img src={banner} alt={`Banner ${index}`} className="slide-image" />
