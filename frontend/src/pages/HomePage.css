@@ -380,6 +380,12 @@
     flex: 0 0 33.333333%;
     padding: 0 4px;
   }
+  .slide-image {
+    height: auto;
+    aspect-ratio: 1 / 1;
+    max-height: none;
+    object-fit: cover;
+  }
 }
 
 .slide-image {
