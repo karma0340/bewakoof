@@ -11,7 +11,7 @@ const wishlistRoutes = require('./routes/wishlistRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const bannerRoutes = require('./routes/bannerRoutes');
 
-connectDB();
+connectDB().catch(err => console.error('Database connection failed on startup:', err.message));
 
 const app = express();
 
