@@ -1,0 +1,9 @@
+.search-page { padding: 24px; max-width: 1280px; margin: 0 auto; min-height: 60vh; }
+.search-page-header { margin-bottom: 24px; }
+.search-page-header h1 { font-size: 22px; color: var(--text-secondary); font-weight: 400; }
+.search-page-header strong { color: var(--text-primary); font-weight: 700; }
+.search-count { font-size: 14px; font-weight: 400; color: var(--text-secondary); }
+.search-no-results { text-align: center; padding: 80px 20px; }
+.search-no-results div { font-size: 72px; margin-bottom: 16px; }
+.search-no-results h3 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+.search-no-results p { color: var(--text-secondary); }

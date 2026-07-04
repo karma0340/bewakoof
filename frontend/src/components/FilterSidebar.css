@@ -1,0 +1,268 @@
+/* ═══════════════════════════════════════════════
+   FilterSidebar — Real bewakoof.com filter panel
+═══════════════════════════════════════════════ */
+
+.filter-sidebar {
+  font-family: var(--font-main), sans-serif;
+}
+
+/* Header: "Filters   Clear All" */
+.fs-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 0 14px 0;
+  border-bottom: 1px solid #f0f0f0;
+  margin-bottom: 0;
+}
+
+.fs-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #222;
+}
+
+.fs-clear-all {
+  font-size: 13px;
+  font-weight: 500;
+  color: #51cccc;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  font-family: var(--font-main), sans-serif;
+  transition: opacity 0.12s;
+}
+.fs-clear-all:hover { opacity: 0.75; }
+
+/* Filter Section */
+.fs-section {
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.fs-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 14px 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  color: #222;
+  font-family: var(--font-main), sans-serif;
+  text-align: left;
+}
+
+.fs-section-header:hover { color: #000; }
+
+.fs-chevron {
+  flex-shrink: 0;
+  color: #2d2d2d;
+  transition: transform 0.2s ease;
+}
+.fs-chevron.collapsed {
+  transform: rotate(0deg); /* points down when collapsed */
+}
+.fs-chevron.expanded {
+  transform: rotate(180deg); /* points up when open */
+}
+
+.fs-section-body {
+  padding-bottom: 14px;
+}
+
+/* Checkbox list */
+.fs-checkbox-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.fs-checkbox-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  cursor: pointer;
+  font-size: 13px;
+  color: #2d2d2d;
+  font-family: var(--font-main), sans-serif;
+}
+
+.fs-checkbox-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+  font-family: var(--font-main), sans-serif;
+}
+
+.fs-checkbox-left input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.fs-checkbox-mark {
+  width: 16px;
+  height: 16px;
+  border: 1px solid #c8c8c8;
+  border-radius: 3px;
+  background: #fff;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.12s, background 0.12s;
+}
+
+.fs-checkbox-left input:checked ~ .fs-checkbox-mark {
+  background: #222222;
+  border-color: #222222;
+}
+
+.fs-checkbox-left input:checked ~ .fs-checkbox-mark::after {
+  content: '';
+  display: block;
+  width: 9px;
+  height: 5px;
+  border-left: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+  transform: rotate(-45deg) translateY(-1px);
+}
+
+.fs-checkbox-label {
+  font-size: 13px;
+  color: #2d2d2d;
+  line-height: 1.4;
+  font-weight: 400;
+  font-family: var(--font-main), sans-serif;
+}
+
+.fs-checkbox-row:hover .fs-checkbox-label { color: #000; }
+
+.fs-checkbox-count {
+  font-size: 12px;
+  color: #9e9e9e;
+  font-weight: 500;
+  font-family: var(--font-main), sans-serif;
+}
+
+/* SIZE chips */
+.fs-size-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.fs-size-chip {
+  min-width: 40px;
+  height: 36px;
+  padding: 0 10px;
+  border: 1.5px solid #ddd;
+  border-radius: 4px;
+  background: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  color: #444;
+  cursor: pointer;
+  font-family: var(--font-main), sans-serif;
+  transition: all 0.12s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fs-size-chip:hover {
+  border-color: #888;
+  color: #222;
+}
+
+.fs-size-chip.active {
+  border-color: #222;
+  background: #222;
+  color: #fff;
+}
+
+/* COLOR swatches */
+.fs-color-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.fs-color-swatch {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.12s, box-shadow 0.12s;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.fs-color-swatch:hover {
+  transform: scale(1.12);
+}
+
+.fs-color-swatch.active {
+  outline-color: #222;
+  transform: scale(1.1);
+}
+
+.fs-color-swatch svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* Price Range */
+.fs-price-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.fs-price-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border: 1.5px solid #ddd;
+  border-radius: 4px;
+  padding: 0 8px;
+  height: 36px;
+  flex: 1;
+  background: #fff;
+  transition: border-color 0.12s;
+}
+
+.fs-price-input-wrap:focus-within { border-color: #222; }
+
+.fs-rupee {
+  font-size: 13px;
+  color: #666;
+  flex-shrink: 0;
+}
+
+.fs-price-input {
+  border: none;
+  background: transparent;
+  width: 100%;
+  font-size: 13px;
+  color: #222;
+  font-family: var(--font-main), sans-serif;
+  outline: none;
+}
+
+.fs-price-sep {
+  font-size: 12px;
+  color: #aaa;
+  flex-shrink: 0;
+}

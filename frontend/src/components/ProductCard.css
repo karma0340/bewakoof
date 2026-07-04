@@ -1,0 +1,185 @@
+/* ═══════════════════════════════════════════
+   ProductCard — Real bewakoof.com card style
+═══════════════════════════════════════════ */
+
+.product-card {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+  border-radius: 4px;
+  overflow: hidden;
+  background: #fff;
+  transition: box-shadow 0.2s;
+  cursor: pointer;
+  position: relative;
+}
+
+.product-card:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+}
+
+/* Image container — 3:4 aspect ratio */
+.product-card-img-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background: #f5f5f5;
+  border-radius: 4px;
+}
+
+.product-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  border-radius: 4px;
+  transition: opacity 0.25s ease;
+  display: block;
+}
+
+.product-img-primary {
+  position: absolute;
+  inset: 0;
+}
+
+.product-img-hover {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+}
+
+.product-card:hover .product-img-primary { opacity: 0; }
+.product-card:hover .product-img-hover { opacity: 1; }
+
+/* FIT badge — top-left, black strip */
+.product-badges {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.badge-fit {
+  background: rgba(0,0,0,0.82);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 3px 7px;
+  letter-spacing: 0.5px;
+  font-family: var(--font-main), sans-serif;
+  text-transform: uppercase;
+}
+
+/* Discount badge — bottom-left orange */
+.product-discount-badge {
+  position: absolute;
+  bottom: 8px;
+  left: 0;
+  background: #ff5722;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  font-family: var(--font-main), sans-serif;
+}
+
+/* Wishlist Heart — top-right */
+.wishlist-btn {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.92);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+  transition: transform 0.15s, background 0.15s;
+  z-index: 5;
+}
+
+.wishlist-btn:hover { background: #fff; transform: scale(1.1); }
+.wishlist-btn svg { width: 15px; height: 15px; }
+.wishlist-btn.wished svg { fill: #e53935; stroke: #e53935; }
+
+/* Product info */
+.product-card-info {
+  padding: 8px 4px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.product-card-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: #212121;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-family: var(--font-main), sans-serif;
+}
+
+/* Price block */
+.price-block {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 2px;
+}
+
+.price-current {
+  font-size: 14px;
+  font-weight: 700;
+  color: #212121;
+  font-family: var(--font-main), sans-serif;
+}
+
+.price-original {
+  font-size: 12px;
+  color: #aaa;
+  text-decoration: line-through;
+  font-family: var(--font-main), sans-serif;
+}
+
+.price-discount {
+  font-size: 11px;
+  color: #388e3c;
+  font-weight: 600;
+  font-family: var(--font-main), sans-serif;
+}
+
+/* Rating row */
+.product-card-rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 2px;
+}
+
+.rating {
+  background: #388e3c;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-family: var(--font-main), sans-serif;
+}
+
+.rating-count {
+  font-size: 11px;
+  color: #888;
+  font-family: var(--font-main), sans-serif;
+}
