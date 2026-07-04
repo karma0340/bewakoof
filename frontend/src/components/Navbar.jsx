@@ -371,7 +371,7 @@ const Navbar = ({ gender, setGender }) => {
         <div className="navbar-inner">
 
           {/* Logo — Real Bewakoof trademark SVG */}
-          <Link to="/" className="navbar-logo" aria-label="Bewakoof Home">
+          <Link to="/" className="navbar-logo" aria-label="Bewakoof Home" onClick={() => setGender(null)}>
             <img
               src="/bewakoof-logo.svg"
               alt="Bewakoof"
@@ -389,12 +389,6 @@ const Navbar = ({ gender, setGender }) => {
                 to="/men-clothing"
                 className={`nav-link ${(location.pathname === '/' && activeGender === 'men') || location.pathname === '/men-clothing' || hoveredMegaMenu === 'men' ? 'active' : ''}`}
                 onMouseEnter={() => handleMegaMouseEnter('men')}
-                onClick={(e) => {
-                  if (location.pathname === '/') {
-                    e.preventDefault();
-                    setGender('men');
-                  }
-                }}
               >
                 MEN
               </Link>
@@ -409,12 +403,6 @@ const Navbar = ({ gender, setGender }) => {
                 to="/women-clothing"
                 className={`nav-link ${(location.pathname === '/' && activeGender === 'women') || location.pathname === '/women-clothing' || hoveredMegaMenu === 'women' ? 'active' : ''}`}
                 onMouseEnter={() => handleMegaMouseEnter('women')}
-                onClick={(e) => {
-                  if (location.pathname === '/') {
-                    e.preventDefault();
-                    setGender('women');
-                  }
-                }}
               >
                 WOMEN
               </Link>
@@ -597,12 +585,6 @@ const Navbar = ({ gender, setGender }) => {
               <Link
                 key={item.label}
                 to={item.link}
-                onClick={(e) => {
-                  if (item.gender && location.pathname === '/') {
-                    e.preventDefault();
-                    setGender(item.gender);
-                  }
-                }}
                 className={`subnav-link ${item.gender === activeGender ? 'subnav-pill-active' : item.gender ? 'subnav-pill-inactive' : ''}`}
               >
                 {item.label}
