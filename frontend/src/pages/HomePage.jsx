@@ -51,6 +51,20 @@ const HERO_BANNERS = {
   ],
 };
 
+const NEWEST_DROPS_BANNERS = {
+  men: [
+    'https://images.bewakoof.com/uploads/grid/app/Capsule_banner_desktop-ollie_1782809645183.jpg',
+    'https://images.bewakoof.com/uploads/grid/app/1440x400-desktop-CapsuleBanner-shortsseason-men_1781601574241.jpg',
+    'https://images.bewakoof.com/uploads/grid/app/desktop-accesories_1782281146022.jpg',
+    'https://images.bewakoof.com/uploads/grid/app/1440x400-Msite-CapsuleBanner-01_1779682448720.jpg',
+    'https://images.bewakoof.com/uploads/grid/app/Capsule_desktop_men_1779448126755.png',
+  ],
+  women: [
+    'https://images.bewakoof.com/uploads/grid/app/Capsule_banner_desktop-ollie_1782809645183.jpg',
+    'https://images.bewakoof.com/uploads/grid/app/desktop-accesories_1782281146022.jpg',
+  ],
+};
+
 const MEN_TRENDING_CATEGORIES = [
   { label: 'T-Shirts', src: 'https://images.bewakoof.com/uploads/grid/app/DESKTOP-444x666-TrendingCategoryIcon-2026-tshirts-men-1777959959.jpg', link: '/men-clothing?category=t-shirt' },
   { label: 'Joggers', src: 'https://images.bewakoof.com/uploads/grid/app/DESKTOP-444x666-TrendingCategoryIcon-2026-joggers-men-1777959962.jpg', link: '/men-clothing?category=joggers' },
@@ -92,6 +106,7 @@ const OVERSIZED_HAUL_WIDGETS = [
 const HomePage = ({ gender, setGender }) => {
   const [tickerIndex, setTickerIndex] = useState(0);
   const [slideIndex, setSlideIndex] = useState(0);
+  const [newestSlideIndex, setNewestSlideIndex] = useState(0);
   const [transitionEnabled, setTransitionEnabled] = useState(true);
   const [bestsellers, setBestsellers] = useState([]);
   const [trackpants, setTrackpants] = useState([]);
@@ -170,20 +185,30 @@ const HomePage = ({ gender, setGender }) => {
   }, [gender]);
 
   const activeBanners = gender ? HERO_BANNERS[gender] || HERO_BANNERS.men : [];
+  const activeNewestBanners = gender ? NEWEST_DROPS_BANNERS[gender] || NEWEST_DROPS_BANNERS.men : [];
   const activeCategories = gender === 'women' ? WOMEN_TRENDING_CATEGORIES : MEN_TRENDING_CATEGORIES;
 
   // Auto-slide hero banners with seamless infinite loop
   useEffect(() => {
     if (!gender) return;
     setSlideIndex(0); // Reset on gender swap
+    setNewestSlideIndex(0);
     setTransitionEnabled(true);
     
     const slideTimer = setInterval(() => {
       setTransitionEnabled(true);
       setSlideIndex((prev) => prev + 1);
     }, 3800);
-    return () => clearInterval(slideTimer);
-  }, [gender]);
+
+    const newestTimer = setInterval(() => {
+      setNewestSlideIndex((prev) => (prev + 1) % activeNewestBanners.length);
+    }, 5000);
+
+    return () => {
+      clearInterval(slideTimer);
+      clearInterval(newestTimer);
+    };
+  }, [gender, activeNewestBanners.length]);
 
   // Snap-back logic for infinite loop
   useEffect(() => {
@@ -293,6 +318,32 @@ const HomePage = ({ gender, setGender }) => {
           className="promo-strip-img"
         />
       </div>
+
+      {/* Newest Drops of the Season Sliding Banners */}
+      <section className="newest-drops-section">
+        <h2 className="section-main-title">NEWEST DROPS OF THE SEASON</h2>
+        <div className="newest-drops-slider-container">
+          <div 
+            className="newest-drops-slider-track"
+            style={{ transform: `translateX(-${newestSlideIndex * 100}%)` }}
+          >
+            {activeNewestBanners.map((banner, index) => (
+              <div className="newest-slide" key={index}>
+                <img src={banner} alt={`Newest Drop ${index}`} className="newest-slide-image" />
+              </div>
+            ))}
+          </div>
+          <div className="slider-dots">
+            {activeNewestBanners.map((_, index) => (
+              <span
+                key={index}
+                className={`slider-dot ${index === newestSlideIndex ? 'active' : ''}`}
+                onClick={() => setNewestSlideIndex(index)}
+              />
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* 3. Oversized Tees Haul / Print-patterns Section */}
       <section className="oversized-tees-haul-section">

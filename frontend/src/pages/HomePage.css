@@ -751,6 +751,47 @@
   }
 }
 
+/* NEWEST DROPS SLIDER SECTION */
+.newest-drops-section {
+  max-width: 1170px;
+  margin: 45px auto;
+  padding: 0 16px;
+  box-sizing: border-box;
+}
+
+.newest-drops-slider-container {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+}
+
+.newest-drops-slider-track {
+  display: flex;
+  transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  width: 100%;
+}
+
+.newest-slide {
+  flex: 0 0 100%;
+  width: 100%;
+}
+
+.newest-slide-image {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 14 / 4;
+  object-fit: cover;
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .newest-slide-image {
+    aspect-ratio: 7 / 3;
+  }
+}
+
 /* SAVINGS CORNER GRID SECTION */
 .savings-corner-section {
   max-width: 1170px;
