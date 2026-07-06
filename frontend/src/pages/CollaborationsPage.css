@@ -1,7 +1,6 @@
 /* ===================================================
    CollaborationsPage
 =================================================== */
-.collabs-page { }
 
 /* Hero */
 .collabs-hero { background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%); color: white; padding: 60px 80px; display: flex; align-items: center; justify-content: space-between; gap: 40px; }
