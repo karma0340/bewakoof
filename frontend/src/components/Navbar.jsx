@@ -12,18 +12,16 @@ const API = baseUrl ? (baseUrl.endsWith('/api') ? baseUrl : `${baseUrl.replace(/
 
 /* Sub-nav items — matches real bewakoof.com */
 const SUB_NAV = [
-  { label: 'MEN', link: '/men-clothing', gender: 'men' },
-  { label: 'WOMEN', link: '/women-clothing', gender: 'women' },
-  { label: 'COLLABS', link: '/collaborations', special: true },
   { label: 'LIVE NOW', link: '/men-clothing?sort=newest' },
   { label: 'ACCESSORIES', link: '/accessories' },
   { label: 'PLUS SIZE', link: '/men-clothing?fit=plus-size' },
   { label: 'PARTY ANIMAL', link: '/men-clothing?pattern=graphic' },
   { label: 'SNEAKERS', link: '/accessories?category=sneakers' },
-  { label: 'OFFICE WEAR', link: '/men-clothing?category=shirt' },
-  { label: 'POLOS', link: '/men-clothing?category=polo' },
-  { label: 'JOGGERS', link: '/men-clothing?category=joggers' },
-  { label: 'HOODIES', link: '/men-clothing?category=hoodie' },
+  { label: 'OFFICIAL MERCH', link: '/men-clothing?collaboration=official' },
+  { label: 'BEWAKOOF AIR', link: '/men-clothing?collection=air' },
+  { label: 'HEAVY DUTY', link: '/men-clothing?collection=heavy-duty' },
+  { label: 'SHOP NOW', link: '/men-clothing' },
+  { label: 'CUSTOMIZATION', link: '/collaborations' },
 ];
 
 /* Mega Menu Data for MEN, WOMEN, ACCESSORIES — Matches real bewakoof.com */
@@ -794,45 +792,44 @@ const Navbar = ({ gender, setGender }) => {
         </div>
       )}
 
-      {/* ── Sub-Nav (scrollable pill bar) — Shown on shop pages or when gender is active ── */}
-      {(location.pathname !== '/' || gender) && (
+      {/* ── Sub-Nav (unified switcher capsule and scrollable links) ── */}
+      {(location.pathname !== '/' || gender || activeGender) && (
         <div className="subnav">
           <div className="subnav-inner">
-            {SUB_NAV.map((item) => (
-              <Link
-                key={item.label}
-                to={item.link}
-                className={`subnav-link ${item.special ? 'subnav-pill-special' : ''} ${item.gender === activeGender ? 'subnav-pill-active' : item.gender ? 'subnav-pill-inactive' : ''}`}
+            {/* Inline Switcher Capsule */}
+            <div className="subnav-gender-switcher">
+              <button
+                className={`subnav-gender-btn ${activeGender === 'men' ? 'active' : ''}`}
+                onClick={() => {
+                  setGender('men');
+                  if (location.pathname !== '/') navigate('/men-clothing');
+                }}
               >
-                {item.label}
-              </Link>
-            ))}
-          </div>
-        </div>
-      )}
+                MEN
+              </button>
+              <button
+                className={`subnav-gender-btn ${activeGender === 'women' ? 'active' : ''}`}
+                onClick={() => {
+                  setGender('women');
+                  if (location.pathname !== '/') navigate('/women-clothing');
+                }}
+              >
+                WOMEN
+              </button>
+            </div>
 
-      {/* Mobile Gender Switcher Tab Bar (Pill selector) - displayed on Home and main Shop pages */}
-      {(location.pathname === '/' || location.pathname.includes('-clothing')) && (
-        <div className="mobile-gender-switcher-container">
-          <div className="mobile-gender-switcher">
-            <button
-              className={`gender-tab-btn ${activeGender === 'men' ? 'active' : ''}`}
-              onClick={() => {
-                setGender('men');
-                if (location.pathname !== '/') navigate('/men-clothing');
-              }}
-            >
-              MEN
-            </button>
-            <button
-              className={`gender-tab-btn ${activeGender === 'women' ? 'active' : ''}`}
-              onClick={() => {
-                setGender('women');
-                if (location.pathname !== '/') navigate('/women-clothing');
-              }}
-            >
-              WOMEN
-            </button>
+            {/* Scrollable links (Desktop/Tablet only) */}
+            <div className="subnav-links-wrap">
+              {SUB_NAV.map((item) => (
+                <Link
+                  key={item.label}
+                  to={item.link}
+                  className="subnav-link"
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
       )}

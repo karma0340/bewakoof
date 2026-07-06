@@ -491,11 +491,12 @@
    SUB-NAV — pill bar below header
 ════════════════════════════════════════ */
 .subnav {
-  background: #fff;
+  background: #ffffff;
   border-bottom: 1px solid #e8e8e8;
   position: sticky;
   top: 60px;
   z-index: 99;
+  width: 100%;
 }
 
 .subnav-inner {
@@ -504,49 +505,76 @@
   max-width: 1170px;
   width: 100%;
   margin: 0 auto;
-  padding: 0 12px;
-  overflow-x: auto;
-  scrollbar-width: none;
-  gap: 4px;
-  height: 48px;
+  padding: 0 16px;
+  box-sizing: border-box;
+  height: 52px;
+  gap: 24px;
 }
 
-.subnav-inner::-webkit-scrollbar { display: none; }
+.subnav-gender-switcher {
+  display: flex;
+  background: #eeeeee;
+  padding: 2px;
+  border-radius: 30px;
+  height: 38px;
+  align-items: center;
+  box-sizing: border-box;
+  border: 1px solid #e2e2e2;
+  flex-shrink: 0;
+}
 
-.subnav-link {
-  font-size: 14px;
+.subnav-gender-btn {
+  border: none;
+  background: transparent;
+  padding: 0 20px;
+  height: 100%;
+  font-size: 13px;
   font-weight: 700;
-  color: #333;
-  text-decoration: none;
-  padding: 6px 14px;
-  white-space: nowrap;
-  border-radius: 20px;
-  transition: all 0.15s;
+  border-radius: 26px;
+  color: #444444;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: all 0.15s ease;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   font-family: var(--font-main), sans-serif;
-  letter-spacing: 0.3px;
 }
 
-.subnav-link:hover { background: #f5f5f5; color: #222; }
-
-/* Active gender: filled yellow pill (MEN) */
-.subnav-pill-active {
-  background: #FFD700 !important;
-  color: #222 !important;
-  font-weight: 700 !important;
-  border-radius: 20px;
+.subnav-gender-btn.active {
+  background: #ffd232;
+  color: #292d35;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
 }
-.subnav-pill-active:hover { background: #FFC800 !important; }
 
-/* Inactive gender: outlined white pill (WOMEN) */
-.subnav-pill-inactive {
-  background: #fff;
-  border: 1.5px solid #ccc;
-  color: #333;
-  font-weight: 600;
+.subnav-links-wrap {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  height: 100%;
 }
-.subnav-pill-inactive:hover { border-color: #888; background: #f9f9f9; }
+.subnav-links-wrap::-webkit-scrollbar { display: none; }
+
+.subnav-link {
+  font-size: 12px;
+  font-weight: 700;
+  color: #292d35;
+  text-decoration: none;
+  white-space: nowrap;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  height: 100%;
+  transition: color 0.15s;
+  font-family: var(--font-main), sans-serif;
+}
+
+.subnav-link:hover {
+  color: #000000;
+}
 
 /* ════════════════════════════════════════
    RESPONSIVE
@@ -618,9 +646,37 @@
   .nav-action-label { display: none; }
   .nav-pipe { display: none; }
 
-  /* Subnav hides on mobile as bewakoof.com does */
-  .subnav { display: none !important; }
-  .subnav-bar { display: none !important; }
+  /* Subnav is shown on mobile as it contains the toggler capsule */
+  .subnav {
+    display: block !important;
+    position: relative !important;
+    top: 0 !important;
+    border-bottom: 1.5px solid #f0f0f0;
+  }
+  .subnav-inner {
+    justify-content: center;
+    padding: 8px 14px;
+    height: auto;
+  }
+  .subnav-links-wrap {
+    display: none !important;
+  }
+  .subnav-gender-switcher {
+    width: 100%;
+    margin: 0;
+    background: #f7f7f7;
+    border-radius: 30px;
+    padding: 3px;
+    border: 1.5px solid #ececec;
+    height: 44px;
+  }
+  .subnav-gender-btn {
+    flex: 1;
+    border-radius: 26px;
+    padding: 10px 0;
+    font-size: 13px;
+    font-weight: 700;
+  }
 
   .desktop-only {
     display: none !important;
@@ -920,46 +976,7 @@
   text-align: center;
 }
 
-/* Mobile Sub-Nav Tab bar (MEN/WOMEN double capsule switcher) */
-.mobile-gender-switcher-container {
-  display: none;
-  background: #ffffff;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-@media (max-width: 600px) {
-  .mobile-gender-switcher-container {
-    display: block;
-    border-bottom: 1.5px solid #f0f0f0;
-  }
-  .mobile-gender-switcher {
-    display: flex;
-    background: #f7f7f7;
-    padding: 3px;
-    border-radius: 30px;
-    margin: 12px 14px;
-    border: 1.5px solid #ececec;
-  }
-  .gender-tab-btn {
-    flex: 1;
-    border: none;
-    background: transparent;
-    padding: 10px 0;
-    font-size: 13px;
-    font-weight: 700;
-    border-radius: 26px;
-    color: #444;
-    transition: all 0.2s ease;
-    text-align: center;
-    cursor: pointer;
-  }
-  .gender-tab-btn.active {
-    background: var(--brand-yellow);
-    color: var(--brand-black);
-    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-  }
-}
+/* Omitted obsolete mobile gender switcher rules */
 
 @media (max-width: 375px) {
   .navbar-inner { height: 48px; }
