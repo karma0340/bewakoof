@@ -10,7 +10,7 @@
   flex-direction: column;
   overflow-x: hidden;
   background-color: #fce844;
-  background-image: url('/bg-gender-select.webp');
+  background-image: url('https://images.bewakoof.com/web/bg-desktop-gender-select-screen-compressed-v2.webp');
   background-size: cover;
   background-position: center top;
   background-repeat: no-repeat;
@@ -132,8 +132,8 @@
 
 .landing-gender-card {
   position: relative;
-  width: 180px;
-  height: 290px;
+  width: 220px;
+  height: 334px;
   border-radius: 6px;
   overflow: hidden;
   box-shadow: 0 4px 16px rgba(0,0,0,0.14);
@@ -297,8 +297,10 @@
     padding: 0 10px;
   }
   .landing-gender-card {
-    width: calc((100% - 12px) / 2);
-    height: 270px;
+    width: 35%;
+    aspect-ratio: 3 / 5;
+    height: auto;
+    max-height: 48vh;
   }
   .landing-card-photo {
     height: 100%;
@@ -311,10 +313,10 @@
     bottom: 6px;
   }
   .landing-collab-banner {
-    margin-top: -120px;
+    margin-top: -110px;
   }
   .landing-bottom-bar {
-    margin-top: -24px;
+    margin-top: -30px;
   }
   .slogan-img {
     height: 46px;
@@ -323,8 +325,10 @@
 
 @media (max-width: 480px) {
   .landing-gender-card {
-    width: calc((100% - 12px) / 2);
-    height: 250px;
+    width: 35%;
+    aspect-ratio: 3 / 5;
+    height: auto;
+    max-height: 46vh;
   }
   .landing-card-btn {
     font-size: 11px;
@@ -332,7 +336,7 @@
     bottom: 6px;
   }
   .landing-collab-banner {
-    margin-top: -90px;
+    margin-top: -100px;
   }
   .shop-for-img {
     height: 46px;

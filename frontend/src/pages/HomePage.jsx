@@ -248,33 +248,33 @@ const HomePage = ({ gender, setGender }) => {
 
         <section className="landing-hero-section">
           <div className="landing-abfrl-logo">
-            <img src="/abfrl-logo.svg" alt="Aditya Birla Fashion & Retail" />
+            <img src="https://images.bewakoof.com/web/ic-desktop-abfrl.svg" alt="Aditya Birla Fashion & Retail" />
           </div>
 
           <div className="landing-hero-content">
             <div className="landing-hero-title">
-              <img src="/shop-for.svg" alt="bewakoof SHOP FOR" className="shop-for-img" />
+              <img src="https://images.bewakoof.com/web/ic-desktop-shop-for.svg" alt="bewakoof SHOP FOR" className="shop-for-img" />
             </div>
 
             <div className="landing-gender-container">
               <button onClick={() => setGender('men')} className="landing-gender-card" id="landing-men-card">
-                <img src="/gender-men.png" alt="Men Fashion" className="landing-card-photo" />
+                <img src="https://images.bewakoof.com/uploads/grid/app/gender-men-1766398718.png" alt="Men Fashion" className="landing-card-photo" />
                 <div className="landing-card-btn">MEN</div>
               </button>
               <button onClick={() => setGender('women')} className="landing-gender-card" id="landing-women-card">
-                <img src="/gender-women.png" alt="Women Fashion" className="landing-card-photo" />
+                <img src="https://images.bewakoof.com/uploads/grid/app/gender-women-1766398717.png" alt="Women Fashion" className="landing-card-photo" />
                 <div className="landing-card-btn">WOMEN</div>
               </button>
             </div>
           </div>
 
           <div className="landing-collab-banner">
-            <img src="/official-collab.webp" alt="Official Collaborations" className="collab-img" />
+            <img src="https://images.bewakoof.com/web/img-official-collab-desktop-new-compressed-v2.webp" alt="Official Collaborations" className="collab-img" />
           </div>
         </section>
 
         <footer className="landing-bottom-bar">
-          <img src="/bk-slogan.svg" alt="ALL EYES ON YOU - Homegrown & Proud Since 2012" className="slogan-img" />
+          <img src="https://images.bewakoof.com/web/ic-desktop-bk-slogan.svg" alt="ALL EYES ON YOU - Homegrown & Proud Since 2012" className="slogan-img" />
         </footer>
       </div>
     );
