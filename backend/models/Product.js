@@ -9,7 +9,7 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: true,
       enum: [
-        't-shirt','shirt','hoodie','sweatshirt','joggers','trackpants',
+        't-shirt','shirt','polo','hoodie','sweatshirt','joggers','trackpants',
         'shorts','jeans','cargo','jacket','kurta','co-ord-set',
         'bag','cap','wallet','socks','phone-case','bottle','watch','other'
       ],

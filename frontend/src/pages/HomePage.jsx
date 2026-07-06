@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import ProductCard from '../components/ProductCard';
+import Loader from '../components/Loader';
 import './HomePage.css';
 
 const baseUrl = import.meta.env.VITE_API_URL || '';
@@ -30,19 +31,23 @@ const TICKER_ITEMS = [
   },
 ];
 
-// Banner carousels for Men and Women (using original CDN paths)
+// Banner carousels for Men and Women (using live CDN paths)
 const HERO_BANNERS = {
   men: [
-    'https://images.bewakoof.com/uploads/grid/app/1X1-BewagoofySale-July2026-MEN_1783078719102.jpg',
+    'https://images.bewakoof.com/uploads/grid/app/1x1-BewagoofySale-July2026-endstod-men_1783280286566.jpg',
     'https://images.bewakoof.com/uploads/grid/app/1x1-goofysale-July2026-oversized-men_1783091958439.jpg',
     'https://images.bewakoof.com/uploads/grid/app/1x1-goofysale-July2026-jeans-men_1783091958439.jpg',
     'https://images.bewakoof.com/uploads/grid/app/1x1-goofysale-July2026-cft-men_1783091958439.jpg',
+    'https://images.bewakoof.com/uploads/grid/app/1x1-goofysale-July2026-joggers-men_1783091958439.jpg',
+    'https://images.bewakoof.com/uploads/grid/app/1x1-goofysale-July2026-shirts-men_1783091958439.jpg',
   ],
   women: [
-    'https://images.bewakoof.com/uploads/grid/app/1X1-BewagoofySale-July2026-WOMEN_1783078719102.jpg',
-    'https://images.bewakoof.com/uploads/grid/app/1x1-goofysale-July2026-oversized-women_1783091958439.jpg',
-    'https://images.bewakoof.com/uploads/grid/app/1x1-goofysale-July2026-jeans-women_1783091958439.jpg',
-    'https://images.bewakoof.com/uploads/grid/app/1x1-goofysale-July2026-cft-women_1783091958439.jpg',
+    'https://images.bewakoof.com/uploads/grid/app/1x1-BewagoofySale-July2026-endstod-women_1783280286567.jpg',
+    'https://images.bewakoof.com/uploads/grid/app/1x1-goofysale-July2026-oversized-women_1783092413426.jpg',
+    'https://images.bewakoof.com/uploads/grid/app/1x1-goofysale-July2026-jeans-women_1783092413426.jpg',
+    'https://images.bewakoof.com/uploads/grid/app/1x1-goofysale-July2026-bf-women_1783092413426.jpg',
+    'https://images.bewakoof.com/uploads/grid/app/1x1-goofysale-July2026-joggers-women_1783092413426.jpg',
+    'https://images.bewakoof.com/uploads/grid/app/1x1-goofysale-July2026-shirts-women_1783092413425.jpg',
   ],
 };
 
@@ -62,17 +67,16 @@ const MEN_TRENDING_CATEGORIES = [
 ];
 
 const WOMEN_TRENDING_CATEGORIES = [
-  { label: 'T-Shirts', src: 'https://images.bewakoof.com/uploads/grid/app/DESKTOP-444x666-TrendingCategoryIcon-2026-tshirts-women-1777959972.jpg', link: '/women-clothing?category=t-shirt' },
-  { label: 'Joggers', src: 'https://images.bewakoof.com/uploads/grid/app/DESKTOP-444x666-TrendingCategoryIcon-2026-joggers-women-1777959974.jpg', link: '/women-clothing?category=joggers' },
-  { label: 'Polos', src: 'https://images.bewakoof.com/uploads/grid/app/DESKTOP-444x666-TrendingCategoryIcon-2026-polo-women-1777959972.jpg', link: '/women-clothing?category=polo' },
-  { label: 'Sneakers', src: 'https://images.bewakoof.com/uploads/grid/app/DESKTOP-444x666-TrendingCategoryIcon-2026-sneakers-women-1777959976.jpg', link: '/accessories?category=sneakers' },
-  { label: 'Accessories', src: 'https://images.bewakoof.com/uploads/grid/app/DESKTOP-444x666-TrendingCategoryIcon-2026-accessories-women-1777959976.jpg', link: '/accessories' },
-  { label: 'Winterwear', src: 'https://images.bewakoof.com/uploads/grid/app/DESKTOP-444x666-TrendingCategoryIcon-2026-winter-women-1777959973.jpg', link: '/women-clothing?category=winterwear' },
-  { label: 'Shirts', src: 'https://images.bewakoof.com/uploads/grid/app/DESKTOP-444x666-TrendingCategoryIcon-2026-shirt-women-1777959973.jpg', link: '/women-clothing?category=shirt' },
-  { label: 'Jeans', src: 'https://images.bewakoof.com/uploads/grid/app/DESKTOP-444x666-TrendingCategoryIcon-2026-jeans-women-1777959975.jpg', link: '/women-clothing?category=jeans' },
-  { label: 'Dresses', src: 'https://images.bewakoof.com/uploads/grid/app/DESKTOP-444x666-TrendingCategoryIcon-2026-dresses-women-1777959975.jpg', link: '/women-clothing?category=dresses' },
-  { label: 'Pants', src: 'https://images.bewakoof.com/uploads/grid/app/DESKTOP-444x666-TrendingCategoryIcon-2026-pants-women-1777959974.jpg', link: '/women-clothing?category=trousers' },
-  { label: 'Plus Size', src: 'https://images.bewakoof.com/uploads/grid/app/DESKTOP-444x666-TrendingCategoryIcon-2026-plus-women-1777959973.jpg', link: '/women-clothing?fit=plus-size' },
+  { label: 'T-Shirts', src: 'https://images.bewakoof.com/uploads/grid/app/DESKTOP-444x666-TrendingCategoryIcon-2026-tees-women-1778563821.jpg', link: '/women-clothing?category=t-shirt' },
+  { label: 'Joggers', src: 'https://images.bewakoof.com/uploads/grid/app/DESKTOP-444x666-TrendingCategoryIcon-2026-joggers-women-1777958663.jpg', link: '/women-clothing?category=joggers' },
+  { label: 'Jeans', src: 'https://images.bewakoof.com/uploads/grid/app/DESKTOP-444x666-TrendingCategoryIcon-2026-jeans-women-1777958662.jpg', link: '/women-clothing?category=jeans' },
+  { label: 'Dresses', src: 'https://images.bewakoof.com/uploads/grid/app/DESKTOP-444x666-TrendingCategoryIcon-2026-dresses-women-1778564065.jpg', link: '/women-clothing?category=dresses' },
+  { label: 'Accessories', src: 'https://images.bewakoof.com/uploads/grid/app/DESKTOP-444x666-TrendingCategoryIcon-2026-accessories-women-1777958661.jpg', link: '/accessories' },
+  { label: 'Winterwear', src: 'https://images.bewakoof.com/uploads/grid/app/DESKTOP-444x666-TrendingCategoryIcon-2026-winterr-women-1778564064.jpg', link: '/women-clothing?category=winterwear' },
+  { label: 'Shirts', src: 'https://images.bewakoof.com/uploads/grid/app/DESKTOP-444x666-TrendingCategoryIcon-2026-shirts-women-1778564064.jpg', link: '/women-clothing?category=shirt' },
+  { label: 'Summer Sets', src: 'https://images.bewakoof.com/uploads/grid/app/DESKTOP-444x666-TrendingCategoryIcon-2026-summer-women-1777958661.jpg', link: '/women-clothing?pattern=printed' },
+  { label: 'Pants', src: 'https://images.bewakoof.com/uploads/grid/app/DESKTOP-444x666-TrendingCategoryIcon-2026-pants-women-1777958662.jpg', link: '/women-clothing?category=trousers' },
+  { label: 'Plus Size', src: 'https://images.bewakoof.com/uploads/grid/app/DESKTOP-444x666-TrendingCategoryIcon-2026-plus-women-1777959067.jpg', link: '/women-clothing?fit=plus-size' },
   { label: 'View All', src: 'https://images.bewakoof.com/uploads/grid/app/444x666-Trending-Category-Icon--3--1737370241.jpg', link: '/women-clothing' }
 ];
 
@@ -263,9 +267,7 @@ const HomePage = ({ gender, setGender }) => {
         <h2 className="section-main-title">Bestsellers</h2>
         
         {loadingBestsellers ? (
-          <div className="bestsellers-skeleton">
-            <p>Loading premium bestsellers...</p>
-          </div>
+          <Loader />
         ) : (
           <div className="bestsellers-carousel-wrapper">
             <button className="carousel-arrow arrow-left" onClick={() => handleScroll('left')} aria-label="Slide Left">‹</button>

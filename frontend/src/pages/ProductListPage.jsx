@@ -3,6 +3,7 @@ import { useSearchParams, Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import ProductCard from '../components/ProductCard';
 import FilterSidebar from '../components/FilterSidebar';
+import Loader from '../components/Loader';
 import './ProductListPage.css';
 
 const baseUrl = import.meta.env.VITE_API_URL || '';
@@ -173,17 +174,8 @@ const ProductListPage = ({ gender, title, bannerSrc }) => {
               </div>
             )}
 
-            {/* Product Grid */}
             {loading ? (
-              <div className="product-grid">
-                {Array.from({ length: 12 }).map((_, i) => (
-                  <div key={i} className="product-card-skeleton">
-                    <div className="skeleton" style={{ aspectRatio: '3/4', borderRadius: 4 }} />
-                    <div className="skeleton" style={{ height: 13, marginTop: 10, width: '70%' }} />
-                    <div className="skeleton" style={{ height: 11, marginTop: 6, width: '50%' }} />
-                  </div>
-                ))}
-              </div>
+              <Loader />
             ) : products.length === 0 ? (
               <div className="plp-empty">
                 <div className="plp-empty-icon">🔍</div>

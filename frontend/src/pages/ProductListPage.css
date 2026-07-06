@@ -315,9 +315,21 @@
 }
 
 @media (max-width: 480px) {
+  .plp-inner { padding: 0 10px; }
   .product-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 8px;
   }
   .plp-title { font-size: 16px; }
+  .plp-promo-bar { font-size: 12px; padding: 7px 10px; flex-wrap: wrap; text-align: center; }
+  .plp-breadcrumb { font-size: 11px; }
+  .plp-header-row { margin-bottom: 10px; }
+  .plp-mobile-btn { padding: 7px 12px; font-size: 12px; }
+}
+
+@media (max-width: 375px) {
+  .plp-inner { padding: 0 6px; }
+  .product-grid { gap: 6px; }
+  .plp-title { font-size: 14px; }
+  .plp-count { font-size: 12px; }
 }

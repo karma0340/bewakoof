@@ -33,3 +33,13 @@
 .cart-empty p { color: var(--text-secondary); margin-bottom: 24px; }
 
 @media (max-width: 768px) { .cart-layout { grid-template-columns: 1fr; } }
+
+@media (max-width: 480px) {
+  .cart-page { padding: 12px; }
+  .cart-title { font-size: 18px; margin-bottom: 16px; }
+  .cart-item { gap: 10px; padding: 12px; }
+  .cart-item-img { width: 80px; height: 96px; }
+  .cart-item-name { font-size: 13px; }
+  .cart-item-meta { gap: 8px; flex-wrap: wrap; }
+  .qty-btn { width: 26px; height: 26px; }
+}

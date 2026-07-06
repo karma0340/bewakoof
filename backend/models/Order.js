@@ -21,14 +21,18 @@ const orderSchema = new mongoose.Schema(
       state: String,
       pincode: String,
     },
-    paymentMethod: { type: String, default: 'mock' },
+    paymentMethod: { type: String, default: 'razorpay' },
     paymentStatus: { type: String, enum: ['pending', 'paid', 'failed'], default: 'pending' },
+    razorpayOrderId: { type: String, default: '' },
+    razorpayPaymentId: { type: String, default: '' },
+    couponCode: { type: String, default: '' },
+    discount: { type: Number, default: 0 },
     itemsPrice: Number,
     shippingPrice: { type: Number, default: 0 },
     totalPrice: Number,
     status: {
       type: String,
-      enum: ['placed', 'confirmed', 'shipped', 'out_for_delivery', 'delivered', 'cancelled'],
+      enum: ['placed', 'confirmed', 'shipped', 'out_for_delivery', 'delivered', 'cancelled', 'returned'],
       default: 'placed',
     },
     statusHistory: [
@@ -38,8 +42,9 @@ const orderSchema = new mongoose.Schema(
         note: String,
       },
     ],
-    deliveredAt: Date,
     estimatedDelivery: Date,
+    deliveredAt: Date,
+    cancelReason: { type: String, default: '' },
   },
   { timestamps: true }
 );

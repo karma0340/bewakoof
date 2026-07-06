@@ -1,0 +1,44 @@
+/* ===================================================
+   CollaborationsPage
+=================================================== */
+.collabs-page { }
+
+/* Hero */
+.collabs-hero { background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%); color: white; padding: 60px 80px; display: flex; align-items: center; justify-content: space-between; gap: 40px; }
+.collabs-hero-subtitle { font-size: 12px; font-weight: 700; letter-spacing: 3px; color: var(--brand-yellow); margin-bottom: 16px; }
+.collabs-hero-title { font-size: 48px; font-weight: 900; line-height: 1.1; margin-bottom: 16px; }
+.collabs-hero-desc { font-size: 16px; color: rgba(255,255,255,0.7); max-width: 480px; }
+.collabs-hero-logos { display: flex; flex-direction: column; gap: 10px; }
+.hero-logo-pill { background: var(--col); color: white; padding: 10px 24px; border-radius: 30px; font-size: 14px; font-weight: 700; text-align: center; opacity: 0.9; transition: opacity 0.2s, transform 0.2s; }
+.hero-logo-pill:hover { opacity: 1; transform: translateX(-4px); }
+
+/* Stats */
+.collabs-stats { display: flex; gap: 0; background: var(--brand-yellow); }
+.collab-stat-item { flex: 1; text-align: center; padding: 20px; border-right: 1px solid rgba(0,0,0,0.1); }
+.collab-stat-item:last-child { border-right: none; }
+.collab-stat-item strong { display: block; font-size: 24px; font-weight: 900; color: var(--brand-black); }
+.collab-stat-item span { font-size: 13px; color: rgba(0,0,0,0.7); }
+
+/* Grid */
+.collabs-container { max-width: 1280px; margin: 0 auto; padding: 48px 24px 60px; }
+.collabs-section-title { font-size: 28px; font-weight: 800; margin-bottom: 32px; }
+.collabs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; }
+.collab-card { text-decoration: none; color: inherit; border-radius: 12px; overflow: hidden; border: 1px solid var(--border-light); transition: transform 0.25s, box-shadow 0.25s; background: white; display: flex; flex-direction: column; }
+.collab-card:hover { transform: translateY(-6px); box-shadow: 0 16px 40px rgba(0,0,0,0.12); }
+.collab-banner-wrap { position: relative; aspect-ratio: 16/9; background: var(--brand-color, #1a1a1a); overflow: hidden; }
+.collab-banner-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s; }
+.collab-card:hover .collab-banner-img { transform: scale(1.05); }
+.collab-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.7)); display: flex; align-items: flex-end; padding: 12px; }
+.collab-count { background: var(--brand-yellow); color: var(--brand-black); font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 20px; }
+.collab-info { padding: 18px; flex: 1; display: flex; flex-direction: column; }
+.collab-name { font-size: 18px; font-weight: 800; margin-bottom: 6px; }
+.collab-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.5; flex: 1; margin-bottom: 12px; }
+.collab-shop-link { font-size: 13px; font-weight: 700; color: var(--brand-color, var(--brand-black)); }
+
+@media (max-width: 768px) {
+  .collabs-hero { flex-direction: column; padding: 40px 20px; text-align: center; }
+  .collabs-hero-title { font-size: 32px; }
+  .collabs-hero-logos { flex-direction: row; flex-wrap: wrap; justify-content: center; }
+  .collabs-stats { flex-wrap: wrap; }
+  .collab-stat-item { flex: 1 1 calc(50% - 1px); }
+}

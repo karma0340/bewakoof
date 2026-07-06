@@ -15,13 +15,11 @@ const placeOrder = async (req, res) => {
       itemsPrice,
       shippingPrice: shippingPrice || 0,
       totalPrice,
-      paymentStatus: 'paid', // mock
+      paymentStatus: 'paid',
       statusHistory: [{ status: 'placed', note: 'Order placed successfully' }],
     });
 
-    // Clear cart after order
     await User.findByIdAndUpdate(req.user._id, { cart: [] });
-
     res.status(201).json(order);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -53,4 +51,24 @@ const getOrderById = async (req, res) => {
   }
 };
 
-module.exports = { placeOrder, getMyOrders, getOrderById };
+// @PUT /api/orders/:id/cancel
+const cancelOrder = async (req, res) => {
+  try {
+    const order = await Order.findById(req.params.id);
+    if (!order) return res.status(404).json({ message: 'Order not found' });
+    if (order.user.toString() !== req.user._id.toString())
+      return res.status(403).json({ message: 'Not authorized' });
+    if (!['placed', 'confirmed'].includes(order.status))
+      return res.status(400).json({ message: 'Order cannot be cancelled at this stage' });
+
+    order.status = 'cancelled';
+    order.cancelReason = req.body.reason || 'Cancelled by user';
+    order.statusHistory.push({ status: 'cancelled', note: 'Cancelled by user' });
+    await order.save();
+    res.json(order);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+module.exports = { placeOrder, getMyOrders, getOrderById, cancelOrder };

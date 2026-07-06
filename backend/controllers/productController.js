@@ -121,4 +121,21 @@ const deleteProduct = async (req, res) => {
   }
 };
 
-module.exports = { getProducts, searchProducts, getFeatured, getProduct, createProduct, updateProduct, deleteProduct };
+// @GET /api/products/:id/similar
+const getSimilar = async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
+    if (!product) return res.status(404).json({ message: 'Product not found' });
+    const similar = await Product.find({
+      _id: { $ne: product._id },
+      category: product.category,
+      gender: product.gender,
+      isActive: true,
+    }).sort({ rating: -1 }).limit(12);
+    res.json(similar);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+module.exports = { getProducts, searchProducts, getFeatured, getProduct, createProduct, updateProduct, deleteProduct, getSimilar };

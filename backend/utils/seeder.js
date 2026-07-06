@@ -1,170 +1,212 @@
-require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
+/**
+ * Full Seeder - parses local HTML + scrapes live pages + seeds MongoDB
+ */
+require('dotenv').config();
 const mongoose = require('mongoose');
+const path = require('path');
+const { scrapeFromLiveAndLocal } = require('../scripts/scraper');
 const Product = require('../models/Product');
-const Banner = require('../models/Banner');
+const User = require('../models/User');
+const Coupon = require('../models/Coupon');
 const connectDB = require('../config/db');
 
-const menProducts = [
-  // T-SHIRTS
-  {
-    name: 'Hangin Astronaut Oversized T-Shirt',
-    brand: 'Bewakoof', category: 't-shirt', gender: 'men', fit: 'oversized',
-    price: 499, originalPrice: 799, discountPercent: 38, rating: 4.7, ratingCount: 1420,
-    collaboration: 'Space', pattern: 'graphic', color: 'black', colors: ['black', 'navy'],
-    images: ['https://images.bewakoof.com/t640/men-s-black-hangin-astronaut-graphic-printed-oversized-t-shirt-504166-1741325888-1.jpg'],
-    tags: ['astronaut', 'space', 'oversized', 'graphic'],
-    sizes: [{size:'S',stock:10},{size:'M',stock:20},{size:'L',stock:15},{size:'XL',stock:8},{size:'XXL',stock:5}],
-    isFeatured: true, isTrending: true
-  },
-  {
-    name: 'Brick Red Magar Much Graphic T-Shirt',
-    brand: 'Bewakoof', category: 't-shirt', gender: 'men', fit: 'regular',
-    price: 399, originalPrice: 649, discountPercent: 38, rating: 4.5, ratingCount: 980,
-    pattern: 'graphic', color: 'red', colors: ['red', 'black'],
-    images: ['https://images.bewakoof.com/t640/men-s-brick-red-magar-much-graphic-printed-t-shirt-677649-1746769064-1.jpg'],
-    tags: ['humor', 'graphic', 'funky'],
-    sizes: [{size:'S',stock:8},{size:'M',stock:18},{size:'L',stock:12},{size:'XL',stock:6}],
-    isFeatured: true
-  },
-  {
-    name: 'Blue Seek Balance Oversized T-Shirt',
-    brand: 'Bewakoof', category: 't-shirt', gender: 'men', fit: 'oversized',
-    price: 549, originalPrice: 899, discountPercent: 39, rating: 4.8, ratingCount: 1756,
-    pattern: 'graphic', color: 'blue', colors: ['blue', 'black'],
-    images: ['https://images.bewakoof.com/t640/men-s-blue-seek-balance-graphic-printed-oversized-t-shirt-580211-1734699031-1.jpg'],
-    tags: ['balance', 'zen', 'oversized'],
-    sizes: [{size:'S',stock:5},{size:'M',stock:15},{size:'L',stock:10},{size:'XL',stock:4}],
-    isTrending: true
-  },
-  {
-    name: 'Grey Uncharted Graphic Printed T-Shirt',
-    brand: 'Bewakoof', category: 't-shirt', gender: 'men', fit: 'regular',
-    price: 449, originalPrice: 699, discountPercent: 36, rating: 4.6, ratingCount: 843,
-    pattern: 'graphic', color: 'grey', colors: ['grey', 'black'],
-    images: ['https://images.bewakoof.com/t640/men-s-grey-uncharted-graphic-printed-t-shirt-685571-1755163388-1.jpg'],
-    tags: ['uncharted', 'adventure', 'attitude'],
-    sizes: [{size:'S',stock:10},{size:'M',stock:25},{size:'L',stock:20},{size:'XL',stock:10}],
-    isFeatured: true
-  },
-  {
-    name: 'White Into The Wild T-Shirt',
-    brand: 'Bewakoof', category: 't-shirt', gender: 'men', fit: 'regular',
-    price: 429, originalPrice: 749, discountPercent: 42, rating: 4.4, ratingCount: 654,
-    pattern: 'graphic', color: 'white', colors: ['white', 'black'],
-    images: ['https://images.bewakoof.com/t640/men-s-white-into-the-wild-graphic-printed-t-shirt-689723-1758263491-1.jpg'],
-    tags: ['wild', 'nature', 'printed'],
-    sizes: [{size:'S',stock:12},{size:'M',stock:22},{size:'L',stock:18},{size:'XL',stock:9}],
-    isTrending: true
-  },
-  {
-    name: 'Black Leader Typography T-Shirt',
-    brand: 'Bewakoof', category: 't-shirt', gender: 'men', fit: 'regular',
-    price: 399, originalPrice: 699, discountPercent: 43, rating: 4.8, ratingCount: 2100,
-    pattern: 'typography', color: 'black', colors: ['black'],
-    images: ['https://images.bewakoof.com/t640/men-s-black-leader-typography-t-shirt-296653-1764335348-1.jpg'],
-    tags: ['leader', 'typography', 'black'],
-    sizes: [{size:'S',stock:15},{size:'M',stock:30},{size:'L',stock:25},{size:'XL',stock:15}],
-    isFeatured: true
-  },
-  {
-    name: 'One Piece Luffy Oversized Hoodie',
-    brand: 'Bewakoof', category: 'hoodie', gender: 'men', fit: 'oversized',
-    price: 999, originalPrice: 1499, discountPercent: 33, rating: 4.7, ratingCount: 823,
-    collaboration: 'One Piece', pattern: 'graphic', color: 'black', colors: ['black', 'yellow'],
-    images: ['https://images.bewakoof.com/t640/men-s-black-hangin-astronaut-graphic-printed-oversized-t-shirt-504166-1741325888-1.jpg'],
-    tags: ['luffy', 'one piece', 'anime', 'hoodie'],
-    sizes: [{size:'S',stock:8},{size:'M',stock:15},{size:'L',stock:12},{size:'XL',stock:5}],
-    isFeatured: true, isTrending: true
-  },
-  {
-    name: 'Batman Dark Knight Hoodie',
-    brand: 'Bewakoof', category: 'hoodie', gender: 'men', fit: 'regular',
-    price: 899, originalPrice: 1399, discountPercent: 36, rating: 4.4, ratingCount: 612,
-    collaboration: 'DC', pattern: 'graphic', color: 'black', colors: ['black'],
-    images: ['https://images.bewakoof.com/t640/men-s-grey-uncharted-graphic-printed-t-shirt-685571-1755163388-1.jpg'],
-    tags: ['batman', 'dc', 'hoodie', 'superhero'],
-    sizes: [{size:'S',stock:6},{size:'M',stock:14},{size:'L',stock:10},{size:'XL',stock:4}]
-  },
-];
 
-const womenProducts = [
-  {
-    name: 'Coffee Typography Oversized T-Shirt',
-    brand: 'Bewakoof', category: 't-shirt', gender: 'women', fit: 'oversized',
-    price: 449, originalPrice: 749, discountPercent: 40, rating: 4.5, ratingCount: 876,
-    pattern: 'graphic', color: 'beige', colors: ['beige', 'white'],
-    images: ['https://images.bewakoof.com/t640/men-s-blue-seek-balance-graphic-printed-oversized-t-shirt-580211-1734699031-1.jpg'],
-    tags: ['coffee', 'typography', 'oversized', 'casual'],
-    sizes: [{size:'XS',stock:8},{size:'S',stock:15},{size:'M',stock:20},{size:'L',stock:12}],
-    isFeatured: true, isTrending: true
-  },
-  {
-    name: 'Brick Red Graphic Print T-Shirt',
-    brand: 'Bewakoof', category: 't-shirt', gender: 'women', fit: 'regular',
-    price: 399, originalPrice: 649, discountPercent: 39, rating: 4.3, ratingCount: 654,
-    pattern: 'graphic', color: 'red', colors: ['red', 'white'],
-    images: ['https://images.bewakoof.com/t640/men-s-brick-red-magar-much-graphic-printed-t-shirt-677649-1746769064-1.jpg'],
-    tags: ['graphic', 'red', 'cute'],
-    sizes: [{size:'XS',stock:6},{size:'S',stock:12},{size:'M',stock:18},{size:'L',stock:9}],
-    isFeatured: true
-  },
-  {
-    name: 'Oversized White Graphic Top',
-    brand: 'Bewakoof', category: 't-shirt', gender: 'women', fit: 'oversized',
-    price: 429, originalPrice: 699, discountPercent: 38, rating: 4.6, ratingCount: 1234,
-    pattern: 'graphic', color: 'white', colors: ['white', 'pink'],
-    images: ['https://images.bewakoof.com/t640/men-s-white-into-the-wild-graphic-printed-t-shirt-689723-1758263491-1.jpg'],
-    tags: ['white', 'graphic', 'oversized'],
-    sizes: [{size:'XS',stock:10},{size:'S',stock:18},{size:'M',stock:22},{size:'L',stock:14}],
-    isFeatured: true, isTrending: true
-  },
-  {
-    name: 'Uncharted Grey Boyfriend T-Shirt',
-    brand: 'Bewakoof', category: 't-shirt', gender: 'women', fit: 'oversized',
-    price: 499, originalPrice: 799, discountPercent: 38, rating: 4.7, ratingCount: 921,
-    pattern: 'graphic', color: 'grey', colors: ['grey'],
-    images: ['https://images.bewakoof.com/t640/men-s-grey-uncharted-graphic-printed-t-shirt-685571-1755163388-1.jpg'],
-    tags: ['grey', 'oversized', 'casual'],
-    sizes: [{size:'XS',stock:7},{size:'S',stock:13},{size:'M',stock:16},{size:'L',stock:8}],
-    isFeatured: true
-  },
-];
+const seedCoupons = async () => {
+  await Coupon.deleteMany({});
+  await Coupon.insertMany([
+    { code: 'WELCOME10', discountType: 'percent', value: 10, minOrder: 499, maxUses: 1000, description: '10% off on first order' },
+    { code: 'FLAT100', discountType: 'flat', value: 100, minOrder: 799, maxUses: 500, description: '₹100 off on orders above ₹799' },
+    { code: 'BEWAKOOF20', discountType: 'percent', value: 20, minOrder: 999, maxUses: 200, description: '20% off on orders above ₹999' },
+    { code: 'SALE15', discountType: 'percent', value: 15, minOrder: 599, maxUses: 1000, description: '15% off sitewide' },
+    { code: 'NEWUSER50', discountType: 'flat', value: 50, minOrder: 399, maxUses: 500, description: '₹50 off for new users' },
+  ]);
+  console.log('✅ Coupons seeded');
+};
 
-const accessoriesProducts = [
-  {
-    name: 'Marvel Avengers Tote Bag',
-    brand: 'Bewakoof', category: 'bag', gender: 'unisex', fit: '',
-    price: 399, originalPrice: 599, discountPercent: 33, rating: 4.4, ratingCount: 567,
-    collaboration: 'Marvel', pattern: 'graphic', color: 'black', colors: ['black'],
-    images: ['https://images.bewakoof.com/t640/men-s-black-leader-typography-t-shirt-296653-1764335348-1.jpg'],
-    tags: ['bag', 'tote', 'marvel'], sizes: [{size:'Free Size', stock: 50}], isFeatured: true
-  },
-  {
-    name: 'Naruto Akatsuki Snapback Cap',
-    brand: 'Bewakoof', category: 'cap', gender: 'unisex', fit: '',
-    price: 499, originalPrice: 749, discountPercent: 33, rating: 4.3, ratingCount: 432,
-    collaboration: 'Naruto', pattern: 'graphic', color: 'black', colors: ['black'],
-    images: ['https://images.bewakoof.com/t640/men-s-black-hangin-astronaut-graphic-printed-oversized-t-shirt-504166-1741325888-1.jpg'],
-    tags: ['cap', 'naruto', 'akatsuki'], sizes: [{size:'Free Size', stock: 40}], isFeatured: true, isTrending: true
-  },
-];
-
-const seedDB = async () => {
+const main = async () => {
   try {
     await connectDB();
-    console.log('Clearing existing products...');
+
+    // Scrape products
+    console.log('\n🕷️  Starting product scraper...');
+    const products = await scrapeFromLiveAndLocal();
+
+    if (products.length === 0) {
+      console.log('❌ No products scraped. Aborting.');
+      process.exit(1);
+    }
+
+    // Clear and reseed products
+    console.log(`\n🗑️  Clearing existing products...`);
     await Product.deleteMany({});
-    await Banner.deleteMany({});
 
-    const allProducts = [...menProducts, ...womenProducts, ...accessoriesProducts];
-    const createdProducts = await Product.insertMany(allProducts);
-    console.log(`✅ Seeded ${createdProducts.length} products with working image URLs`);
+    console.log(`📦 Inserting ${products.length} products...`);
+    const docs = products.map(p => ({
+      name: p.name,
+      brand: p.brand || 'Bewakoof',
+      description: p.description || '',
+      category: p.category,
+      gender: p.gender,
+      subCategory: p.subCategory || '',
+      fit: p.fit || 'regular',
+      images: p.images || [],
+      sizes: p.sizes || [],
+      price: p.price,
+      originalPrice: p.originalPrice,
+      discountPercent: p.discountPercent || 0,
+      color: p.color || '',
+      colors: p.colors || [],
+      pattern: p.pattern || '',
+      rating: parseFloat((p.rating || 4.0).toFixed(1)),
+      ratingCount: p.ratingCount || 0,
+      collaboration: p.collaboration || '',
+      tags: p.tags ? p.tags.map(t => typeof t === 'object' ? t.label : String(t)) : [],
+      isActive: true,
+      isFeatured: p.isFeatured || false,
+      isTrending: p.isTrending || false,
+    }));
 
+    const mockItems = [
+      {
+        name: "Men's Black Solid Cotton Polo T-Shirt",
+        brand: "Bewakoof",
+        description: "Classic black polo t-shirt with a refined collar and premium cotton blend. Perfect for smart casual occasions.",
+        category: "polo",
+        gender: "men",
+        fit: "regular",
+        price: 549,
+        originalPrice: 1099,
+        discountPercent: 50,
+        color: "Black",
+        colors: ["Black", "White", "Navy"],
+        pattern: "solid",
+        rating: 4.6,
+        ratingCount: 154,
+        images: ["https://images.bewakoof.com/t1080/men-s-black-solid-polo-t-shirt-105-1702462100-1.jpg"],
+        sizes: [{ size: "M", stock: 15 }, { size: "L", stock: 20 }, { size: "XL", stock: 10 }]
+      },
+      {
+        name: "Men's Navy Blue Striped Polo T-Shirt",
+        brand: "Bewakoof",
+        description: "Look sharp and stay comfortable in this navy blue striped polo shirt.",
+        category: "polo",
+        gender: "men",
+        fit: "regular",
+        price: 599,
+        originalPrice: 1299,
+        discountPercent: 54,
+        color: "Navy Blue",
+        colors: ["Navy Blue", "Grey"],
+        pattern: "striped",
+        rating: 4.5,
+        ratingCount: 89,
+        images: ["https://images.bewakoof.com/t1080/men-s-navy-striped-polo-t-shirt-302-1702462100-1.jpg"],
+        sizes: [{ size: "S", stock: 5 }, { size: "M", stock: 15 }, { size: "L", stock: 20 }]
+      },
+      {
+        name: "Women's Maroon Solid Polo Shirt",
+        brand: "Bewakoof",
+        description: "Maroon premium pique cotton polo shirt for women, offering a clean smart-casual look.",
+        category: "polo",
+        gender: "women",
+        fit: "regular",
+        price: 499,
+        originalPrice: 999,
+        discountPercent: 50,
+        color: "Maroon",
+        colors: ["Maroon", "White"],
+        pattern: "solid",
+        rating: 4.4,
+        ratingCount: 62,
+        images: ["https://images.bewakoof.com/t1080/women-s-maroon-solid-polo-t-shirt-205-1702462100-1.jpg"],
+        sizes: [{ size: "S", stock: 12 }, { size: "M", stock: 18 }, { size: "L", stock: 15 }]
+      },
+      {
+        name: "Men's Yellow Graphic Printed Hoodie",
+        brand: "Bewakoof",
+        description: "Keep it warm and stylish with this custom printed yellow hoodie.",
+        category: "hoodie",
+        gender: "men",
+        fit: "oversized",
+        price: 899,
+        originalPrice: 1999,
+        discountPercent: 55,
+        color: "Yellow",
+        colors: ["Yellow", "Black"],
+        pattern: "graphic",
+        rating: 4.8,
+        ratingCount: 312,
+        images: ["https://images.bewakoof.com/t1080/men-s-yellow-printed-hoodie-502-1702462100-1.jpg"],
+        sizes: [{ size: "M", stock: 25 }, { size: "L", stock: 30 }, { size: "XL", stock: 20 }]
+      },
+      {
+        name: "Men's Olive Green Solid Sweatshirt",
+        brand: "Bewakoof",
+        description: "Your go-to comfort companion. An olive green sweatshirt made of ultra-soft fleece.",
+        category: "sweatshirt",
+        gender: "men",
+        fit: "regular",
+        price: 799,
+        originalPrice: 1799,
+        discountPercent: 56,
+        color: "Olive Green",
+        colors: ["Olive Green", "Charcoal"],
+        pattern: "solid",
+        rating: 4.7,
+        ratingCount: 195,
+        images: ["https://images.bewakoof.com/t1080/men-s-olive-sweatshirt-402-1702462100-1.jpg"],
+        sizes: [{ size: "M", stock: 12 }, { size: "L", stock: 18 }, { size: "XL", stock: 15 }]
+      },
+      {
+        name: "Women's Lilac Oversized Printed Sweatshirt",
+        brand: "Bewakoof",
+        description: "A gorgeous pastel lilac sweatshirt featuring a cute graphic print on the front.",
+        category: "sweatshirt",
+        gender: "women",
+        fit: "oversized",
+        price: 849,
+        originalPrice: 1899,
+        discountPercent: 55,
+        color: "Lilac",
+        colors: ["Lilac"],
+        pattern: "graphic",
+        rating: 4.7,
+        ratingCount: 143,
+        images: ["https://images.bewakoof.com/t1080/women-s-lilac-printed-sweatshirt-309-1702462100-1.jpg"],
+        sizes: [{ size: "S", stock: 10 }, { size: "M", stock: 20 }, { size: "L", stock: 15 }]
+      },
+      {
+        name: "Women's Grey Casual Fleece Hoodie",
+        brand: "Bewakoof",
+        description: "A cozy, lightweight grey fleece hoodie for everyday loungewear.",
+        category: "hoodie",
+        gender: "women",
+        fit: "regular",
+        price: 899,
+        originalPrice: 1999,
+        discountPercent: 55,
+        color: "Grey",
+        colors: ["Grey", "Black"],
+        pattern: "solid",
+        rating: 4.6,
+        ratingCount: 99,
+        images: ["https://images.bewakoof.com/t1080/women-s-grey-fleece-hoodie-602-1702462100-1.jpg"],
+        sizes: [{ size: "S", stock: 15 }, { size: "M", stock: 22 }, { size: "L", stock: 14 }]
+      }
+    ];
+
+    const finalDocs = [...docs, ...mockItems];
+    await Product.insertMany(finalDocs, { ordered: false });
+    console.log(`✅ ${finalDocs.length} products seeded (${docs.length} scraped + ${mockItems.length} injected)!`);
+
+    await seedCoupons();
+
+    console.log('\n🎉 Seeding complete!');
     process.exit(0);
   } catch (err) {
-    console.error('❌ Error seeding database:', err);
+    console.error('❌ Seeder error:', err);
     process.exit(1);
   }
 };
 
-seedDB();
+main();

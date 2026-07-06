@@ -1,0 +1,63 @@
+/* ===================================================
+   UserProfilePage
+=================================================== */
+.profile-page { display: grid; grid-template-columns: 280px 1fr; gap: 32px; max-width: 1100px; margin: 0 auto; padding: 32px 24px 60px; min-height: 70vh; }
+
+/* Sidebar */
+.profile-sidebar { background: white; border: 1px solid var(--border-light); border-radius: 12px; padding: 24px; align-self: flex-start; position: sticky; top: 80px; }
+.profile-avatar-section { text-align: center; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--border-light); }
+.profile-avatar-circle { width: 80px; height: 80px; border-radius: 50%; background: var(--brand-black); color: var(--brand-yellow); font-size: 36px; font-weight: 800; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; }
+.profile-name { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+.profile-email { font-size: 12px; color: var(--text-muted); }
+
+.profile-nav { display: flex; flex-direction: column; gap: 4px; }
+.profile-nav-item { width: 100%; text-align: left; background: none; border: none; padding: 12px 14px; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; transition: background 0.15s, color 0.15s; color: var(--text-primary); }
+.profile-nav-item:hover { background: var(--bg-light); }
+.profile-nav-item.active { background: var(--brand-yellow); font-weight: 700; }
+.logout-btn { color: var(--accent-red) !important; margin-top: 12px; border-top: 1px solid var(--border-light); border-radius: 0 0 8px 8px; padding-top: 16px; }
+
+/* Content */
+.profile-content { }
+.profile-section { background: white; border: 1px solid var(--border-light); border-radius: 12px; padding: 28px; }
+.section-heading { font-size: 20px; font-weight: 700; margin-bottom: 24px; }
+.section-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+.profile-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+/* Stats */
+.account-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 32px; }
+.stat-card { background: var(--bg-light); border-radius: 10px; padding: 20px; text-align: center; }
+.stat-icon { font-size: 28px; margin-bottom: 8px; }
+.stat-val { font-size: 16px; font-weight: 700; color: var(--brand-black); margin-bottom: 4px; }
+.stat-label { font-size: 12px; color: var(--text-secondary); }
+
+/* Address form */
+.addr-form-card { background: var(--bg-light); border-radius: 10px; padding: 20px; margin-bottom: 24px; }
+.addr-form-title { font-size: 16px; font-weight: 700; margin-bottom: 16px; }
+.address-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+.default-check { font-size: 13px; display: flex; align-items: center; gap: 6px; cursor: pointer; margin-bottom: 16px; }
+.addr-form-actions { display: flex; gap: 12px; justify-content: flex-end; }
+
+/* Address cards */
+.addr-list { display: flex; flex-direction: column; gap: 14px; }
+.addr-card { border: 1.5px solid var(--border-light); border-radius: 10px; padding: 16px 20px; }
+.addr-card.default-addr { border-color: var(--brand-black); }
+.addr-card-top { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.addr-type { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 3px; text-transform: capitalize; }
+.addr-type-home { background: #E8F5E9; color: #388e3c; }
+.addr-type-work { background: #E3F2FD; color: #1976D2; }
+.addr-type-other { background: var(--bg-light); color: var(--text-secondary); }
+.default-chip { font-size: 11px; background: var(--brand-yellow); padding: 2px 8px; border-radius: 3px; font-weight: 700; }
+.addr-card-name { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+.addr-card-text { font-size: 13px; color: var(--text-secondary); margin-bottom: 12px; }
+.addr-card-actions { display: flex; gap: 12px; }
+.addr-action-btn { background: none; border: 1px solid var(--border-light); border-radius: 6px; padding: 6px 14px; font-size: 12px; cursor: pointer; transition: background 0.15s; }
+.addr-action-btn:hover { background: var(--bg-light); }
+.addr-action-btn.delete:hover { background: #FFF0F0; border-color: var(--accent-red); color: var(--accent-red); }
+
+.empty-addresses { text-align: center; padding: 40px 20px; color: var(--text-secondary); }
+
+@media (max-width: 768px) {
+  .profile-page { grid-template-columns: 1fr; }
+  .profile-sidebar { position: static; }
+  .profile-form-grid, .address-grid-2, .account-stats { grid-template-columns: 1fr; }
+}
