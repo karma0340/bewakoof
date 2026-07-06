@@ -2,11 +2,13 @@ const mongoose = require('mongoose');
 const dns = require('dns');
 
 // Fix for Windows DNS resolution issues with MongoDB Atlas SRV records
-try {
-  dns.setServers(['8.8.8.8', '8.8.4.4']);
-  console.log('🌐 Configured Google DNS (8.8.8.8, 8.8.4.4) for MongoDB SRV resolution');
-} catch (e) {
-  console.warn('⚠️ Failed to set custom DNS servers:', e.message);
+if (process.platform === 'win32') {
+  try {
+    dns.setServers(['8.8.8.8', '8.8.4.4']);
+    console.log('🌐 Configured Google DNS (8.8.8.8, 8.8.4.4) for MongoDB SRV resolution');
+  } catch (e) {
+    console.warn('⚠️ Failed to set custom DNS servers:', e.message);
+  }
 }
 
 let isConnected = false;
@@ -25,12 +27,15 @@ const connectDB = async (attempt = 1) => {
   }
 
   try {
-    const conn = await mongoose.connect(process.env.MONGO_URI, {
+    const options = {
       serverSelectionTimeoutMS: 10000,
       connectTimeoutMS: 10000,
       socketTimeoutMS: 45000,
-      family: 4, // Force IPv4 — fixes many SRV/DNS issues on Windows
-    });
+    };
+    if (process.platform === 'win32') {
+      options.family = 4; // Force IPv4 — fixes many SRV/DNS issues on Windows
+    }
+    const conn = await mongoose.connect(process.env.MONGO_URI, options);
     isConnected = !!conn.connections[0].readyState;
     console.log(`✅ MongoDB Atlas connected: ${conn.connection.host}`);
   } catch (error) {
