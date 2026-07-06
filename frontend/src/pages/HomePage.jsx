@@ -94,9 +94,22 @@ const HomePage = ({ gender, setGender }) => {
   const [slideIndex, setSlideIndex] = useState(0);
   const [transitionEnabled, setTransitionEnabled] = useState(true);
   const [bestsellers, setBestsellers] = useState([]);
+  const [trackpants, setTrackpants] = useState([]);
+  const [jeans, setJeans] = useState([]);
+  const [newArrivals, setNewArrivals] = useState([]);
+  const [summerPicks, setSummerPicks] = useState([]);
+
   const [loadingBestsellers, setLoadingBestsellers] = useState(false);
+  const [loadingTrackpants, setLoadingTrackpants] = useState(false);
+  const [loadingJeans, setLoadingJeans] = useState(false);
+  const [loadingNewArrivals, setLoadingNewArrivals] = useState(false);
+  const [loadingSummerPicks, setLoadingSummerPicks] = useState(false);
 
   const scrollRef = useRef(null);
+  const trackpantsScrollRef = useRef(null);
+  const jeansScrollRef = useRef(null);
+  const newArrivalsScrollRef = useRef(null);
+  const summerPicksScrollRef = useRef(null);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -105,21 +118,54 @@ const HomePage = ({ gender, setGender }) => {
     return () => clearInterval(timer);
   }, []);
 
-  // Fetch bestsellers from database on gender tab switch
+  // Fetch all product shelves on gender tab switch
   useEffect(() => {
     if (gender) {
       setLoadingBestsellers(true);
-      // Fetch products matching gender
+      setLoadingTrackpants(true);
+      setLoadingJeans(true);
+      setLoadingNewArrivals(true);
+      setLoadingSummerPicks(true);
+
+      // 1. Bestsellers (all/popular products)
       axios.get(`${API}/products?gender=${gender}&limit=12`)
         .then(({ data }) => {
-          if (data && data.products) {
-            setBestsellers(data.products);
-          }
+          if (data && data.products) setBestsellers(data.products);
           setLoadingBestsellers(false);
         })
-        .catch(() => {
-          setLoadingBestsellers(false);
-        });
+        .catch(() => setLoadingBestsellers(false));
+
+      // 2. Trackpants (category trackpants/joggers/pants)
+      axios.get(`${API}/products?gender=${gender}&category=trackpants,pants,joggers&limit=12`)
+        .then(({ data }) => {
+          if (data && data.products) setTrackpants(data.products);
+          setLoadingTrackpants(false);
+        })
+        .catch(() => setLoadingTrackpants(false));
+
+      // 3. Jeans
+      axios.get(`${API}/products?gender=${gender}&category=jeans&limit=12`)
+        .then(({ data }) => {
+          if (data && data.products) setJeans(data.products);
+          setLoadingJeans(false);
+        })
+        .catch(() => setLoadingJeans(false));
+
+      // 4. New Arrivals
+      axios.get(`${API}/products?gender=${gender}&sort=newest&limit=12`)
+        .then(({ data }) => {
+          if (data && data.products) setNewArrivals(data.products);
+          setLoadingNewArrivals(false);
+        })
+        .catch(() => setLoadingNewArrivals(false));
+
+      // 5. Hot Summer Picks (vests, boxers, pyjamas, shorts)
+      axios.get(`${API}/products?gender=${gender}&category=vest,boxers,pyjamas,shorts&limit=12`)
+        .then(({ data }) => {
+          if (data && data.products) setSummerPicks(data.products);
+          setLoadingSummerPicks(false);
+        })
+        .catch(() => setLoadingSummerPicks(false));
     }
   }, [gender]);
 
@@ -153,11 +199,12 @@ const HomePage = ({ gender, setGender }) => {
 
   const currentTicker = TICKER_ITEMS[tickerIndex];
 
-  const handleScroll = (direction) => {
-    if (scrollRef.current) {
-      const { scrollLeft, clientWidth } = scrollRef.current;
+  const handleScroll = (ref, direction) => {
+    const targetRef = ref || scrollRef;
+    if (targetRef.current) {
+      const { scrollLeft, clientWidth } = targetRef.current;
       const offset = direction === 'left' ? -clientWidth * 0.8 : clientWidth * 0.8;
-      scrollRef.current.scrollTo({ left: scrollLeft + offset, behavior: 'smooth' });
+      targetRef.current.scrollTo({ left: scrollLeft + offset, behavior: 'smooth' });
     }
   };
 
@@ -247,49 +294,7 @@ const HomePage = ({ gender, setGender }) => {
         />
       </div>
 
-      {/* 3. Trending Categories Section */}
-      <section className="trending-categories-section">
-        <h2 className="section-main-title">Trending Categories</h2>
-        <div className="categories-grid-container">
-          {activeCategories.map((cat, idx) => (
-            <Link to={cat.link} className="category-circle-card" key={idx}>
-              <div className="circle-image-wrap">
-                <img src={cat.src} alt={cat.label} className="circle-img" />
-              </div>
-              <span className="circle-card-label">{cat.label}</span>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      {/* 4. Dynamic Bestsellers Sliding Section */}
-      <section className="bestsellers-section">
-        <h2 className="section-main-title">Bestsellers</h2>
-        
-        {loadingBestsellers ? (
-          <Loader />
-        ) : (
-          <div className="bestsellers-carousel-wrapper">
-            <button className="carousel-arrow arrow-left" onClick={() => handleScroll('left')} aria-label="Slide Left">‹</button>
-            <div className="bestsellers-scroll-container" ref={scrollRef}>
-              {bestsellers.map((product) => (
-                <div className="bestseller-card-wrap" key={product._id}>
-                  <ProductCard product={product} />
-                </div>
-              ))}
-            </div>
-            <button className="carousel-arrow arrow-right" onClick={() => handleScroll('right')} aria-label="Slide Right">›</button>
-          </div>
-        )}
-        
-        <div className="explore-all-btn-wrap">
-          <Link to={gender === 'women' ? '/women-clothing' : '/men-clothing'} className="explore-all-link">
-            Explore All
-          </Link>
-        </div>
-      </section>
-
-      {/* 5. Oversized Tees Haul / Print-patterns Section */}
+      {/* 3. Oversized Tees Haul / Print-patterns Section */}
       <section className="oversized-tees-haul-section">
         <div className="haul-title-wrap">
           <img
@@ -311,6 +316,191 @@ const HomePage = ({ gender, setGender }) => {
               </div>
             </Link>
           ))}
+        </div>
+      </section>
+
+      {/* 4. Trending Categories Section */}
+      <section className="trending-categories-section">
+        <h2 className="section-main-title">Trending Categories</h2>
+        <div className="categories-grid-container">
+          {activeCategories.map((cat, idx) => (
+            <Link to={cat.link} className="category-circle-card" key={idx}>
+              <div className="circle-image-wrap">
+                <img src={cat.src} alt={cat.label} className="circle-img" />
+              </div>
+              <span className="circle-card-label">{cat.label}</span>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* 5. Trackpants Section */}
+      <section className="bestsellers-section">
+        <h2 className="section-main-title">Trackpants</h2>
+        {loadingTrackpants ? (
+          <Loader />
+        ) : (
+          <div className="bestsellers-carousel-wrapper">
+            <button className="carousel-arrow arrow-left" onClick={() => handleScroll(trackpantsScrollRef, 'left')} aria-label="Slide Left">‹</button>
+            <div className="bestsellers-scroll-container" ref={trackpantsScrollRef}>
+              {(trackpants.length > 0 ? trackpants : bestsellers).slice(0, 12).map((product) => (
+                <div className="bestseller-card-wrap" key={product._id}>
+                  <ProductCard product={product} />
+                </div>
+              ))}
+            </div>
+            <button className="carousel-arrow arrow-right" onClick={() => handleScroll(trackpantsScrollRef, 'right')} aria-label="Slide Right">›</button>
+          </div>
+        )}
+        <div className="explore-all-btn-wrap">
+          <Link to={gender === 'women' ? '/women-clothing?category=trackpants,pants,joggers' : '/men-clothing?category=trackpants,pants,joggers'} className="explore-all-link">
+            Explore All
+          </Link>
+        </div>
+      </section>
+
+      {/* 6. Denim Verse Section */}
+      <section className="bestsellers-section">
+        <h2 className="section-main-title">Denim Verse</h2>
+        {loadingJeans ? (
+          <Loader />
+        ) : (
+          <div className="bestsellers-carousel-wrapper">
+            <button className="carousel-arrow arrow-left" onClick={() => handleScroll(jeansScrollRef, 'left')} aria-label="Slide Left">‹</button>
+            <div className="bestsellers-scroll-container" ref={jeansScrollRef}>
+              {(jeans.length > 0 ? jeans : bestsellers).slice(0, 12).map((product) => (
+                <div className="bestseller-card-wrap" key={product._id}>
+                  <ProductCard product={product} />
+                </div>
+              ))}
+            </div>
+            <button className="carousel-arrow arrow-right" onClick={() => handleScroll(jeansScrollRef, 'right')} aria-label="Slide Right">›</button>
+          </div>
+        )}
+        <div className="explore-all-btn-wrap">
+          <Link to={gender === 'women' ? '/women-clothing?category=jeans' : '/men-clothing?category=jeans'} className="explore-all-link">
+            Explore All
+          </Link>
+        </div>
+      </section>
+
+      {/* 7. New Arrivals Section */}
+      <section className="bestsellers-section">
+        <h2 className="section-main-title">New Arrivals</h2>
+        {loadingNewArrivals ? (
+          <Loader />
+        ) : (
+          <div className="bestsellers-carousel-wrapper">
+            <button className="carousel-arrow arrow-left" onClick={() => handleScroll(newArrivalsScrollRef, 'left')} aria-label="Slide Left">‹</button>
+            <div className="bestsellers-scroll-container" ref={newArrivalsScrollRef}>
+              {(newArrivals.length > 0 ? newArrivals : bestsellers).slice(0, 12).map((product) => (
+                <div className="bestseller-card-wrap" key={product._id}>
+                  <ProductCard product={product} />
+                </div>
+              ))}
+            </div>
+            <button className="carousel-arrow arrow-right" onClick={() => handleScroll(newArrivalsScrollRef, 'right')} aria-label="Slide Right">›</button>
+          </div>
+        )}
+        <div className="explore-all-btn-wrap">
+          <Link to={gender === 'women' ? '/women-clothing?sort=newest' : '/men-clothing?sort=newest'} className="explore-all-link">
+            Explore All
+          </Link>
+        </div>
+      </section>
+
+      {/* 8. Savings Corner Section */}
+      <section className="savings-corner-section">
+        <h2 className="section-main-title">Savings Corner</h2>
+        <div className="savings-corner-grid">
+          <Link to={gender === 'women' ? '/women-clothing?fit=oversized' : '/men-clothing?fit=oversized'} className="savings-card yellow-card">
+            <span className="savings-title">Buy 2 {gender === 'women' ? "Women's" : "Men's"} Oversized T-Shirts at ₹1199</span>
+            <span className="savings-action">Shop Now ›</span>
+          </Link>
+          <Link to={gender === 'women' ? '/women-clothing?fit=regular' : '/men-clothing?fit=regular'} className="savings-card dark-card">
+            <span className="savings-title">Buy 3 Classic Fit T-Shirts at ₹1199</span>
+            <span className="savings-action">Shop Now ›</span>
+          </Link>
+          <Link to={gender === 'women' ? '/women-clothing?maxPrice=599' : '/men-clothing?maxPrice=599'} className="savings-card accent-card">
+            <span className="savings-title">Under Rs 599 Store</span>
+            <span className="savings-action">Shop Now ›</span>
+          </Link>
+        </div>
+      </section>
+
+      {/* 9. Bestsellers Section */}
+      <section className="bestsellers-section">
+        <h2 className="section-main-title">Bestsellers</h2>
+        {loadingBestsellers ? (
+          <Loader />
+        ) : (
+          <div className="bestsellers-carousel-wrapper">
+            <button className="carousel-arrow arrow-left" onClick={() => handleScroll(scrollRef, 'left')} aria-label="Slide Left">‹</button>
+            <div className="bestsellers-scroll-container" ref={scrollRef}>
+              {bestsellers.slice(0, 12).map((product) => (
+                <div className="bestseller-card-wrap" key={product._id}>
+                  <ProductCard product={product} />
+                </div>
+              ))}
+            </div>
+            <button className="carousel-arrow arrow-right" onClick={() => handleScroll(scrollRef, 'right')} aria-label="Slide Right">›</button>
+          </div>
+        )}
+        <div className="explore-all-btn-wrap">
+          <Link to={gender === 'women' ? '/women-clothing' : '/men-clothing'} className="explore-all-link">
+            Explore All
+          </Link>
+        </div>
+      </section>
+
+      {/* 10. Hot Summer Picks Section */}
+      <section className="bestsellers-section">
+        <h2 className="section-main-title">Hot Summer Picks</h2>
+        {loadingSummerPicks ? (
+          <Loader />
+        ) : (
+          <div className="bestsellers-carousel-wrapper">
+            <button className="carousel-arrow arrow-left" onClick={() => handleScroll(summerPicksScrollRef, 'left')} aria-label="Slide Left">‹</button>
+            <div className="bestsellers-scroll-container" ref={summerPicksScrollRef}>
+              {(summerPicks.length > 0 ? summerPicks : bestsellers).slice(0, 12).map((product) => (
+                <div className="bestseller-card-wrap" key={product._id}>
+                  <ProductCard product={product} />
+                </div>
+              ))}
+            </div>
+            <button className="carousel-arrow arrow-right" onClick={() => handleScroll(summerPicksScrollRef, 'right')} aria-label="Slide Right">›</button>
+          </div>
+        )}
+        <div className="explore-all-btn-wrap">
+          <Link to={gender === 'women' ? '/women-clothing?category=vest,boxers,pyjamas,shorts' : '/men-clothing?category=vest,boxers,pyjamas,shorts'} className="explore-all-link">
+            Explore All
+          </Link>
+        </div>
+      </section>
+
+      {/* 11. SEO Description Paragraph Blocks */}
+      <section className="homepage-seo-section">
+        <div className="seo-container">
+          <h3 className="seo-heading">BEWAKOOF® THE NEW AGE ONLINE SHOPPING EXPERIENCE.</h3>
+          <p className="seo-text">
+            Founded in 2012, Bewakoof® is a lifestyle fashion brand that makes creative, distinctive fashion for the trendy, contemporary Indian. Bewakoof® was created on the principle of creating impact through innovation, honesty and thoughtfulness.
+          </p>
+          <p className="seo-text">
+            With a team of 400 members, and 2mn products sold till date. We like to experiment freely, which allows us to balance creativity and relatability, and our innovative designs. Our range of products is always fresh and up-to-date, and we clock sales of over 1 lakh products a month. Our innovation focus extends to our operations as well. We are vertically integrated, manufacture our own products, and cut out the middleman wherever possible. This direct-to-consumer model allows us to create high-quality fashion at affordable prices. A thoughtful brand, we actively attempt to minimize our environmental footprint and maximize our social impact. These efforts are integrated right into our day-to-day operations, from rainwater harvesting to paper packaging to employee benefits. To create an accessible, affordable and thoughtful experience of online shopping in India.
+          </p>
+
+          <h4 className="seo-sub-heading">Online Shopping at Bewakoof® is hassle-free, convenient and super-exciting!</h4>
+          <p className="seo-text">
+            Online Shopping has always been a fun and exciting task for most and more so when the shopping mall is none other than your own house. We have all had days when we have planned trips to the clothing store in advance, dreaming about what we would buy once we get there. Now we wouldn't think twice before indulging in some online shopping. Well, cut to today's time and age, you can do all this from the comfort of your home while enjoying many online shopping offers, right from amazing deals and discounts to one of the most robust user interface amongst most online shopping sites in India, with many shopping filters to make your shopping experience truly hassle free. This in our own words is what we call Bewakoof.com.
+          </p>
+          <p className="seo-text">
+            Bewakoof®, THE place to be when it comes to the coolest in online fashion, offers you fine, high-quality merchandise go ahead and indulge in a bit of online shopping for men and women's fashion. So browse through the exciting categories we have on offer from men's fashion to basic men's clothing as well as wide variety in womenswear and women's clothes to the amazing range of accessories, fill up your carts and get fast home delivery for all orders. All of this topped with our exclusive online shopping offers makes for an exciting, irresistible and uber cool combo! You can even gift some to your near and dear ones while being absolutely certain that it will put a smile on their faces.
+          </p>
+
+          <h4 className="seo-sub-heading">OUR PHILOSOPHY</h4>
+          <p className="seo-text">
+            We believe in creating the kind of fashion, that makes you stand out as they are in line with the latest local and global trends of the industry, but also at the same time offer value for money functionality, with quality materials and comfortable and flattering prints. We try to look into the psyche of our customers, and try to get inspired by the conversations and experiences around us while creating our graphics, to ensure that they are relatable. We believe in constant and consistent innovation to ensure that our fans get nothing short of the best at affordable rates! While most people do not know, we do not outsource the manufacturing of our products, everything from the conception of the designs to the manufacture and the styling that you see on the photographs of the banners and product pages of our website all happen in house! We go from yarn to product and since we're vertically integrated and bring fashion from us directly to your doorstep without any middlemen that also further ensures reliability because for us it is not just about the money but about building the trust and credibility in our fans about our brand. We also make sure to decrease the impact on environment and are building initiatives that will help us with the same, for now by optimizing our processes to use only as much as we need from nature, rain water harvesting and recycling the water from our RO water facility, because we believe that the spirit of Bewakoof® is about creating an impact by breaking conventions and having a different perspective!
+          </p>
         </div>
       </section>
     </div>
